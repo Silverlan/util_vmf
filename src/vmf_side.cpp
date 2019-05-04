@@ -74,12 +74,7 @@ void vmf::Side::GetBounds(glm::vec3 *min,glm::vec3 *max) const
 	*max = m_max;
 }
 
-vmf::Side::~Side()
-{
-	//delete m_vertices;
-	//delete m_uvs;
-	//delete m_normals;
-}
+vmf::Side::~Side() {}
 
 unsigned int vmf::Side::GetVertexCount() {return static_cast<unsigned int>(m_vertexList.size());}
 
