@@ -69,10 +69,10 @@ void vmf::PolyMesh::GenerateBrushMeshes(std::vector<BrushMesh*> *brushMeshes,std
 		for(int j=0;j<polys->size();j++)
 		{
 			Poly *poly = (*polys)[j];
-			std::vector<Vertex*> *polyVerts = poly->GetVertices();
+			std::vector<Vertex> &polyVerts = poly->GetVertices();
 			std::vector<glm::vec3> *vertexList = new std::vector<glm::vec3>;
-			for(int i=0;i<polyVerts->size();i++)
-				vertexList->push_back((*polyVerts)[i]->pos);
+			for(int i=0;i<polyVerts.size();i++)
+				vertexList->push_back(polyVerts[i].pos);
 			std::vector<glm::vec3> *verts = new std::vector<glm::vec3>;
 			std::vector<glm::vec2> *uvs = new std::vector<glm::vec2>;
 			std::vector<glm::vec3> *normals = new std::vector<glm::vec3>;
@@ -155,13 +155,13 @@ int vmf::PolyMesh::BuildPolyMesh()
 		if(m_polys[i]->IsDisplacement())
 		{
 			DispInfo *info = m_polys[i]->GetDisplacement();
-			std::vector<Vertex*> *vertices = m_polys[i]->GetVertices();
-			for(unsigned int i=0;i<vertices->size();i++)
+			std::vector<Vertex> &vertices = m_polys[i]->GetVertices();
+			for(unsigned int i=0;i<vertices.size();i++)
 			{
-				Vertex *v = (*vertices)[i];
-				if(fabsf(v->pos.x -info->startposition.x) <= EPSILON &&
-					fabsf(v->pos.y -info->startposition.y) <= EPSILON &&
-					fabsf(v->pos.z -info->startposition.z) <= EPSILON
+				Vertex &v = vertices[i];
+				if(fabsf(v.pos.x -info->startposition.x) <= EPSILON &&
+					fabsf(v.pos.y -info->startposition.y) <= EPSILON &&
+					fabsf(v.pos.z -info->startposition.z) <= EPSILON
 				)
 				{
 					info->startpositionId = i;
@@ -197,14 +197,14 @@ void vmf::PolyMesh::Calculate()
 		{
 			uvec::add(&pos,m_polys[i]->GetCenter());
 			uvec::add(&m_centerOfMass,*m_polys[i]->GetWorldPosition());
-			std::vector<Vertex*> *vertices = m_polys[i]->GetVertices();
-			for(int j=0;j<vertices->size();j++)
+			std::vector<Vertex> &vertices = m_polys[i]->GetVertices();
+			for(int j=0;j<vertices.size();j++)
 			{
-				Vertex *v = (*vertices)[j];
+				Vertex &v = vertices[j];
 				glm::vec3 vThis;
 				//glm::vec3 *vNew = new glm::vec3(v->pos);
-				if(HasVertex(v,&vThis)) uvec::match(&v->pos,vThis); // Make sure the vertex in the polygon is the same as ours
-				else m_vertices.push_back(new glm::vec3(v->pos));
+				if(HasVertex(&v,&vThis)) uvec::match(&v.pos,vThis); // Make sure the vertex in the polygon is the same as ours
+				else m_vertices.push_back(new glm::vec3(v.pos));
 				glm::vec3 min,max;
 				m_polys[i]->GetBounds(&min,&max);
 				uvec::min(&m_min,min);

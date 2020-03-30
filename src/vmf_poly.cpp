@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "vmf_poly.hpp"
+#include <sharedutils/util_string.h>
 
 std::ostream& vmf::operator<<(std::ostream &os,const vmf::Poly &poly)
 {
@@ -10,9 +11,8 @@ std::ostream& vmf::operator<<(std::ostream &os,const vmf::Poly &poly)
 	return os;
 }
 
-vmf::Poly::Poly(MaterialManager &materialManager)
-	: m_displacement(NULL),
-	m_material(NULL),m_materialManager(materialManager)
+vmf::Poly::Poly(const std::function<Material*(const std::string&)> &fLoadMaterial)
+	: m_materialLoader(fLoadMaterial)
 {
 	m_distance = 0;
 	m_normal.x = 0;
@@ -30,29 +30,16 @@ vmf::Poly::Poly(MaterialManager &materialManager)
 	m_centerOfMass.x = 0;
 	m_centerOfMass.y = 0;
 	m_centerOfMass.z = 0;
-	m_centerLocalized = NULL;
-	m_texData = NULL;
-}
-
-vmf::Poly::~Poly()
-{
-	if(m_displacement != NULL)
-		delete m_displacement;
-	if(m_texData != NULL)
-		delete m_texData;
-	for(int i=0;i<m_vertices.size();i++)
-		delete m_vertices[i];
-	if(m_centerLocalized != NULL)
-		delete m_centerLocalized;
+	m_texData = {};
 }
 
 void vmf::Poly::RemoveDisplacement()
 {
-	if(m_displacement == nullptr)
+	if(m_displacement.has_value() == false)
 		return;
-	delete m_displacement;
-	m_displacement = nullptr;
-	m_material = m_materialManager.Load("tools/toolsnodraw");
+	m_displacement = {};
+	auto *mat = m_materialLoader("tools/toolsnodraw");
+	m_material = mat ? mat->GetHandle() : MaterialHandle{};
 }
 
 vmf::PolyInfo &vmf::Poly::GetCompiledData() {return m_compiledData;}
@@ -66,16 +53,15 @@ void vmf::Poly::Merge(Poly *poly)
 	*/
 }
 
-void vmf::Poly::SetDisplacement(DispInfo *disp) {m_displacement = disp;}
+void vmf::Poly::SetDisplacement(const DispInfo &disp) {m_displacement = disp;}
 
-vmf::DispInfo *vmf::Poly::GetDisplacement() {return m_displacement;}
-bool vmf::Poly::IsDisplacement() {return (m_displacement == NULL) ? false : true;}
+vmf::DispInfo *vmf::Poly::GetDisplacement() {return m_displacement.has_value() ? &*m_displacement : nullptr;}
+bool vmf::Poly::IsDisplacement() {return m_displacement.has_value();}
 
 void vmf::Poly::SetTextureData(std::string texture,glm::vec3 nu,glm::vec3 nv,float ou,float ov,float su,float sv,float rot)
 {
-	if(m_texData != NULL)
-		delete m_texData;
-	m_texData = new TextureData();
+	ustring::to_lower(texture);
+	m_texData = TextureData{};
 	m_texData->texture = texture;
 	m_texData->nu = nu;
 	m_texData->nv = nv;
@@ -84,12 +70,13 @@ void vmf::Poly::SetTextureData(std::string texture,glm::vec3 nu,glm::vec3 nv,flo
 	m_texData->su = su;
 	m_texData->sv = sv;
 	m_texData->rot = rot;
-	m_material = m_materialManager.Load(texture.c_str());
+
+	m_material = m_materialLoader(texture.c_str());
 }
 
-vmf::TextureData *vmf::Poly::GetTextureData() {return m_texData;}
+vmf::TextureData *vmf::Poly::GetTextureData() {return m_texData.has_value() ? &*m_texData : nullptr;}
 
-Material *vmf::Poly::GetMaterial() {return m_material;}
+Material *vmf::Poly::GetMaterial() {return m_material.get();}
 void vmf::Poly::SetMaterial(Material *material) {m_material = material;}
 
 void vmf::Poly::SetMaterialId(uint32_t id) {m_materialId = id;}
@@ -128,10 +115,9 @@ glm::vec3 vmf::Poly::GetNormal() {return m__normal;}
 
 bool vmf::Poly::HasVertex(glm::vec3 *vert)
 {
-	for(int i=0;i<m_vertices.size();i++)
+	for(auto &vertex : m_vertices)
 	{
-		Vertex *vertex = m_vertices[i];
-		glm::vec3 v = vertex->pos;
+		glm::vec3 v = vertex.pos;
 		glm::vec3 sub(v);
 		uvec::sub(&sub,*vert);
 		if(sub.x <= EPSILON && sub.x >= -EPSILON &&
@@ -148,11 +134,7 @@ bool vmf::Poly::AddUniqueVertex(glm::vec3 vert,glm::vec3 n)
 	return true;
 }
 
-void vmf::Poly::AddVertex(glm::vec3 vert,glm::vec3 n)
-{
-	Vertex *v = new Vertex(vert,n);
-	m_vertices.push_back(v);
-}
+void vmf::Poly::AddVertex(glm::vec3 vert,glm::vec3 n) {m_vertices.push_back(Vertex(vert,n));}
 
 unsigned int vmf::Poly::GetVertexCount() {return static_cast<unsigned int>(m_vertices.size());}
 
@@ -160,14 +142,14 @@ void vmf::Poly::debug_print()
 {
 	std::cout<<"Poly '"<<*this<<"':"<<std::endl;
 	for(int i=0;i<m_vertices.size();i++)
-		std::cout<<"\tVertex ("<<m_vertices[i]->pos.x<<","<<m_vertices[i]->pos.y<<","<<m_vertices[i]->pos.z<<")"<<std::endl;
+		std::cout<<"\tVertex ("<<m_vertices[i].pos.x<<","<<m_vertices[i].pos.y<<","<<m_vertices[i].pos.z<<")"<<std::endl;
 }
 
 void vmf::Poly::SortVertices()
 {
 	if(!IsValid()) return;
-	glm::vec3 a(m_vertices[1]->pos);
-	uvec::sub(&a,m_vertices[0]->pos);
+	glm::vec3 a(m_vertices[1].pos);
+	uvec::sub(&a,m_vertices[0].pos);
 	glm::vec3 an(a);
 	glm::vec3 bn;
 	a = glm::normalize(a);
@@ -182,8 +164,8 @@ void vmf::Poly::SortVertices()
 		tempvert2 = tempvert1 +1;
 		for(unsigned j=i +1;j<numVerts;j++)
 		{
-			glm::vec3 b(m_vertices[tempvert2]->pos);
-			uvec::sub(&b,m_vertices[tempvert1]->pos);
+			glm::vec3 b(m_vertices[tempvert2].pos);
+			uvec::sub(&b,m_vertices[tempvert1].pos);
 			bn = glm::vec3(b);
 			b = glm::normalize(b);
 
@@ -196,16 +178,16 @@ void vmf::Poly::SortVertices()
 			tempvert2++;
 		}
 		if(biggestVert == NULL) break;
-		a = glm::vec3(m_vertices[tempvert1]->pos);
-		uvec::sub(&a,m_vertices[biggestVert]->pos);
+		a = glm::vec3(m_vertices[tempvert1].pos);
+		uvec::sub(&a,m_vertices[biggestVert].pos);
 		an = glm::vec3(a);
 		a = glm::normalize(a);
 
 		if(biggestVert != tempvert1 +1)
 		{
-			glm::vec3 v(m_vertices[tempvert1 +1]->pos);
-			m_vertices[tempvert1 +1]->pos = m_vertices[biggestVert]->pos;
-			m_vertices[biggestVert]->pos = v;
+			glm::vec3 v(m_vertices[tempvert1 +1].pos);
+			m_vertices[tempvert1 +1].pos = m_vertices[biggestVert].pos;
+			m_vertices[biggestVert].pos = v;
 		}
 		tempvert1++;
 	}
@@ -228,11 +210,11 @@ bool vmf::Poly::CalculatePlane()
 	{
 		j = i +1;
 		if(j >= numVerts) j = 0;
-		n.x += (m_vertices[i]->pos.y -m_vertices[j]->pos.y) *(m_vertices[i]->pos.z +m_vertices[j]->pos.z);
-		n.y += (m_vertices[i]->pos.z -m_vertices[j]->pos.z) *(m_vertices[i]->pos.x +m_vertices[j]->pos.x);
-		n.z += (m_vertices[i]->pos.x -m_vertices[j]->pos.x) *(m_vertices[i]->pos.y +m_vertices[j]->pos.y);
+		n.x += (m_vertices[i].pos.y -m_vertices[j].pos.y) *(m_vertices[i].pos.z +m_vertices[j].pos.z);
+		n.y += (m_vertices[i].pos.z -m_vertices[j].pos.z) *(m_vertices[i].pos.x +m_vertices[j].pos.x);
+		n.z += (m_vertices[i].pos.x -m_vertices[j].pos.x) *(m_vertices[i].pos.y +m_vertices[j].pos.y);
 
-		uvec::add(&centerOfMass,m_vertices[i]->pos);
+		uvec::add(&centerOfMass,m_vertices[i].pos);
 	}
 	float magnitude = glm::length(n);
 	n /= magnitude;
@@ -255,7 +237,7 @@ void vmf::Poly::CalculateBounds()
 	uvec::min(&max);
 	for(int i=0;i<m_vertices.size();i++)
 	{
-		glm::vec3 pos = m_vertices[i]->pos;
+		glm::vec3 pos = m_vertices[i].pos;
 		glm::vec3 diff(pos);
 		uvec::sub(&diff,center);
 		uvec::min(&min,diff);
@@ -274,13 +256,13 @@ void vmf::Poly::ReverseVertexOrder()
 	unsigned int h = static_cast<unsigned int>(numVerts *0.5f);
 	for(unsigned int i=0;i<h;i++)
 	{
-		glm::vec3 pos = m_vertices[i]->pos;
-		m_vertices[i]->pos = m_vertices[numVerts -i -1]->pos;
-		m_vertices[numVerts -i -1]->pos = pos;
+		glm::vec3 pos = m_vertices[i].pos;
+		m_vertices[i].pos = m_vertices[numVerts -i -1].pos;
+		m_vertices[numVerts -i -1].pos = pos;
 	}
 }
 
-std::vector<vmf::Vertex*> *vmf::Poly::GetVertices() {return &m_vertices;}
+std::vector<vmf::Vertex> &vmf::Poly::GetVertices() {return m_vertices;}
 
 void vmf::Poly::GetBounds(glm::vec3 *min,glm::vec3 *max)
 {
@@ -294,16 +276,15 @@ void vmf::Poly::GetBounds(glm::vec3 *min,glm::vec3 *max)
 
 void vmf::Poly::Localize(const glm::vec3 &center)
 {
-	if(m_centerLocalized == NULL) m_centerLocalized = new glm::vec3(center);
-	else uvec::add(m_centerLocalized,center);
+	uvec::add(&m_centerLocalized,center);
 	for(int i=0;i<m_vertices.size();i++)
-		uvec::sub(&m_vertices[i]->pos,center);
+		uvec::sub(&m_vertices[i].pos,center);
 	Calculate();
 }
 
 void vmf::Poly::CalculateTextureAxes()
 {
-	TextureData *texData = m_texData;
+	TextureData *texData = GetTextureData();
 	if(texData == NULL) return;
 
 	Material *mat = GetMaterial();
@@ -323,14 +304,14 @@ void vmf::Poly::CalculateTextureAxes()
 	}
 	for(int i=0;i<m_vertices.size();i++)
 	{
-		glm::vec3 v = m_vertices[i]->pos;
-		if(m_centerLocalized != NULL) uvec::add(&v,*m_centerLocalized);
+		glm::vec3 v = m_vertices[i].pos;
+		uvec::add(&v,m_centerLocalized);
 		float du = glm::dot(v,texData->nu);
 		float tu = (du /w) /texData->su +texData->ou /w;
 		float dv = glm::dot(v,texData->nv);
 		float tv = (dv /h) /texData->sv +texData->ov /h;
-		m_vertices[i]->u = tu;
-		m_vertices[i]->v = tv;
+		m_vertices[i].u = tu;
+		m_vertices[i].v = tv;
 	}
 }
 
@@ -347,11 +328,11 @@ void vmf::Poly::CalculateNormal()
 	unsigned int numVerts = static_cast<unsigned int>(m_vertices.size());
 	if(numVerts < 2)
 		return;
-	glm::vec3 a = m_vertices[0]->pos -m_vertices[numVerts -1]->pos;
-	glm::vec3 b = m_vertices[1]->pos -m_vertices[0]->pos;
+	glm::vec3 a = m_vertices[0].pos -m_vertices[numVerts -1].pos;
+	glm::vec3 b = m_vertices[1].pos -m_vertices[0].pos;
 	glm::vec3 n = glm::normalize(glm::cross(a,b));
 	glm::vec3 nd = -n;
-	float d = glm::dot(nd,m_vertices[numVerts -1]->pos);
+	float d = glm::dot(nd,m_vertices[numVerts -1].pos);
 	SetNormal(n);
 	SetDistance(d);
 }
@@ -361,23 +342,23 @@ bool vmf::Poly::GenerateTriangleMesh(std::vector<glm::vec3> *verts,std::vector<g
 	if(!IsValid())
 		return false;
 	unsigned int pivot = 0;
-	Vertex *a = m_vertices[pivot];
+	Vertex &a = m_vertices[pivot];
 	unsigned int numVerts = static_cast<unsigned int>(m_vertices.size());
 	for(unsigned int i=pivot +2;i<numVerts;i++)
 	{
-		Vertex *b = m_vertices[i -1];
-		Vertex *c = m_vertices[i];
-		verts->push_back(a->pos);
-		verts->push_back(b->pos);
-		verts->push_back(c->pos);
+		Vertex &b = m_vertices[i -1];
+		Vertex &c = m_vertices[i];
+		verts->push_back(a.pos);
+		verts->push_back(b.pos);
+		verts->push_back(c.pos);
 
-		uvs->push_back(glm::vec2(a->u,a->v));
-		uvs->push_back(glm::vec2(b->u,b->v));
-		uvs->push_back(glm::vec2(c->u,c->v));
+		uvs->push_back(glm::vec2(a.u,a.v));
+		uvs->push_back(glm::vec2(b.u,b.v));
+		uvs->push_back(glm::vec2(c.u,c.v));
 
-		normals->push_back(a->normal);
-		normals->push_back(b->normal);
-		normals->push_back(c->normal);
+		normals->push_back(a.normal);
+		normals->push_back(b.normal);
+		normals->push_back(c.normal);
 	}
 	return true;
 }

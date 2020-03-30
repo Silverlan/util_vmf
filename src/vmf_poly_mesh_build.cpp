@@ -17,11 +17,11 @@ void vmf::PolyMesh::BuildPolyMeshInfo()
 		auto &polyInfo = poly->GetCompiledData();
 		if(bDisp == false || poly->IsDisplacement())
 		{
-			std::vector<Vertex*> *polyVerts = poly->GetVertices();
-			unsigned int numPolyVerts = static_cast<unsigned int>(polyVerts->size());
+			std::vector<Vertex> &polyVerts = poly->GetVertices();
+			unsigned int numPolyVerts = static_cast<unsigned int>(polyVerts.size());
 			for(unsigned int k=0;k<numPolyVerts;k++)
 			{
-				glm::vec3 &va = (*polyVerts)[k]->pos;
+				glm::vec3 &va = polyVerts[k].pos;
 				bool bExists = false;
 				for(unsigned int l=0;l<info.vertexList.size();l++)
 				{
@@ -100,11 +100,11 @@ void vmf::PolyMesh::BuildPolyMeshInfo()
 		if(poly->IsDisplacement())
 		{
 			auto *disp = poly->GetDisplacement();
-			auto *vertices = poly->GetVertices();
+			auto &vertices = poly->GetVertices();
 			std::vector<glm::vec3> sideVerts;
-			sideVerts.reserve(vertices->size());
-			for(auto it=vertices->begin();it!=vertices->end();++it)
-				sideVerts.push_back((*it)->pos);
+			sideVerts.reserve(vertices.size());
+			for(auto it=vertices.begin();it!=vertices.end();++it)
+				sideVerts.push_back((*it).pos);
 			auto &dispInfo = *(polyInfo.displacement = std::make_unique<PolyDispInfo>()).get();
 			dispInfo.power = disp->power;
 			BuildDisplacement(poly,sideVerts,polyInfo.nu,polyInfo.nv,polyInfo.width,polyInfo.height,
@@ -132,12 +132,12 @@ void vmf::PolyMesh::BuildDisplacement(
 	// Vertex Ids
 	auto *disp = poly->GetDisplacement();
 	auto numVerts = static_cast<unsigned int>(verts.size());
-	auto *vertices = poly->GetVertices();
-	auto numPolyVerts = static_cast<unsigned int>(vertices->size());
+	auto &vertices = poly->GetVertices();
+	auto numPolyVerts = static_cast<unsigned int>(vertices.size());
 	std::vector<unsigned int> vertIds;
 	for(unsigned int k=0;k<numPolyVerts;k++)
 	{
-		auto &va = (*vertices)[k]->pos;
+		auto &va = vertices[k].pos;
 		for(unsigned int l=0;l<numVerts;l++)
 		{
 			auto &vb = verts[l];
@@ -353,7 +353,7 @@ static void FindNeighborNormals(glm::vec3 &v,int rows,std::vector<glm::vec3> &ve
 
 static std::vector<glm::vec3> GetSortedVertices(vmf::Poly *poly)
 {
-	auto &polyVerts = *poly->GetVertices();
+	auto &polyVerts = poly->GetVertices();
 	auto &disp = *poly->GetDisplacement();
 	auto &startPos = disp.startposition;
 	std::vector<glm::vec3> sortedPolyVerts;
@@ -364,7 +364,7 @@ static std::vector<glm::vec3> GetSortedVertices(vmf::Poly *poly)
 	auto vertIdx = 0u;
 	for(auto &v : polyVerts)
 	{
-		auto d = uvec::distance(startPos,v->pos);
+		auto d = uvec::distance(startPos,v.pos);
 		if(d < dMin)
 		{
 			dMin = d;
@@ -374,9 +374,9 @@ static std::vector<glm::vec3> GetSortedVertices(vmf::Poly *poly)
 	}
 	assert(start != -1);
 	for(auto it=polyVerts.begin() +start;it!=polyVerts.end();++it)
-		sortedPolyVerts.push_back((*it)->pos);
+		sortedPolyVerts.push_back((*it).pos);
 	for(auto it=polyVerts.begin();it!=polyVerts.begin() +start;++it)
-		sortedPolyVerts.push_back((*it)->pos);
+		sortedPolyVerts.push_back((*it).pos);
 	return sortedPolyVerts;
 }
 
@@ -389,7 +389,7 @@ void vmf::PolyMesh::BuildDisplacementNormals(std::vector<std::shared_ptr<PolyMes
 	outNormals.resize(numVerts);
 
 	std::array<PolyDispInfo*,9> neighbors = {&displacement,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr};
-	auto &polyVerts = *poly->GetVertices();
+	auto &polyVerts = poly->GetVertices();
 	assert(polyVerts.size() == 4);
 
 	// Debug
@@ -411,13 +411,13 @@ void vmf::PolyMesh::BuildDisplacementNormals(std::vector<std::shared_ptr<PolyMes
 					auto &dispOther = *polyOther->GetDisplacement();
 					if(dispOther.power == disp.power)
 					{
-						auto &otherPolyVerts = *polyOther->GetVertices();
+						auto &otherPolyVerts = polyOther->GetVertices();
 						assert(otherPolyVerts.size() == 4);
 						auto touching = 0;
 						auto numTouching = 0;
 						for(auto it=otherPolyVerts.begin();it!=otherPolyVerts.end();++it)
 						{
-							auto &vOther = (*it)->pos;
+							auto &vOther = (*it).pos;
 							auto idx = 0;
 							for(auto it=sortedPolyVerts.begin();it!=sortedPolyVerts.end();++it)
 							{

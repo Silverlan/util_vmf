@@ -9,6 +9,7 @@
 #include "vmf_dispinfo.hpp"
 #include "vmf_poly_info.hpp"
 #include <string>
+#include <optional>
 #include <mathutil/uvec.h>
 #include <materialmanager.h>
 
@@ -35,21 +36,20 @@ namespace vmf
 	public:
 		friend std::ostream& operator<<(std::ostream&,const Poly&);
 	public:
-		Poly(MaterialManager &materialManager);
-		virtual ~Poly();
+		Poly(const std::function<Material*(const std::string&)> &fLoadMaterial);
 	protected:
-		std::vector<Vertex*> m_vertices;
+		std::vector<Vertex> m_vertices;
 		glm::vec3 m_normal,m__normal;
 		glm::vec3 m_center;
-		glm::vec3 *m_centerLocalized;
+		glm::vec3 m_centerLocalized = {};
 		glm::vec3 m_min;
 		glm::vec3 m_max;
 		glm::vec3 m_centerOfMass;
-		Material *m_material;
-		TextureData *m_texData;
-		DispInfo *m_displacement;
+		MaterialHandle m_material = {};
+		std::optional<TextureData> m_texData = {};
+		std::optional<DispInfo> m_displacement = {};
 		PolyInfo m_compiledData;
-		MaterialManager &m_materialManager;
+		std::function<Material*(const std::string&)> m_materialLoader = nullptr;
 		uint32_t m_materialId = std::numeric_limits<uint32_t>::max();
 
 		double m_distance;
@@ -61,7 +61,7 @@ namespace vmf
 		void CalculateTextureAxes();
 	public:
 		PolyInfo &GetCompiledData();
-		void SetDisplacement(DispInfo *disp);
+		void SetDisplacement(const DispInfo &disp);
 		DispInfo *GetDisplacement();
 		bool IsDisplacement();
 		void SetDistance(double d);
@@ -75,7 +75,7 @@ namespace vmf
 		bool IsValid();
 		virtual void SortVertices();
 		glm::vec3 GetCenter();
-		std::vector<Vertex*> *GetVertices();
+		std::vector<Vertex> &GetVertices();
 		void GetBounds(glm::vec3 *min,glm::vec3 *max);
 		void Localize(const glm::vec3 &center);
 		void debug_print();
