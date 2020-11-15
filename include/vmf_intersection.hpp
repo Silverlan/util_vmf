@@ -5,20 +5,23 @@
 #ifndef __VMF_INTERSECTION_HPP__
 #define __VMF_INTERSECTION_HPP__
 
-#define INTERSECT_OUTSIDE 0
-#define INTERSECT_INSIDE 1
-#define INTERSECT_OVERLAP 2
-
 #include <mathutil/uvec.h>
 
 namespace vmf
 {
+	enum class IntersectResult : uint8_t
+	{
+		Outside = 0,
+		Inside,
+		Overlap
+	};
+
 	struct AABB;
 	namespace Intersect
 	{
 		bool AABBInAABB(const glm::vec3 &minA,const glm::vec3 &maxA,const glm::vec3 &minB,const glm::vec3 &maxB);
 		bool VectorInBounds(glm::vec3 *vec,glm::vec3 *min,glm::vec3 *max,float EPSILON=0.f);
-		int AABBAABB(const glm::vec3 &minA,const glm::vec3 &maxA,const glm::vec3 &minB,const glm::vec3 &maxB);
+		IntersectResult AABBAABB(const glm::vec3 &minA,const glm::vec3 &maxA,const glm::vec3 &minB,const glm::vec3 &maxB);
 		bool AABBAABB(AABB *a,AABB *b);
 		bool AABBTriangle(glm::vec3 min,glm::vec3 max,glm::vec3 a,glm::vec3 b,glm::vec3 c);
 		bool LineAABB(glm::vec3 &o,glm::vec3 &d,glm::vec3 &min,glm::vec3 &max,float *tMinRes,float *tMaxRes=NULL);

@@ -33,7 +33,7 @@ bool vmf::Intersect::AABBInAABB(const glm::vec3 &minA,const glm::vec3 &maxA,cons
 		(maxA.x <= maxB.x && maxA.y <= maxB.y && maxA.z <= maxB.z))) ? true : false;
 }
 
-int vmf::Intersect::AABBAABB(const glm::vec3 &minA,const glm::vec3 &maxA,const glm::vec3 &minB,const glm::vec3 &maxB)
+vmf::IntersectResult vmf::Intersect::AABBAABB(const glm::vec3 &minA,const glm::vec3 &maxA,const glm::vec3 &minB,const glm::vec3 &maxB)
 {
 	if((maxA.x < minB.x) ||
 			(minA.x > maxB.x) ||
@@ -42,10 +42,10 @@ int vmf::Intersect::AABBAABB(const glm::vec3 &minA,const glm::vec3 &maxA,const g
 			(maxA.z < minB.z) ||
 			(minA.z > maxB.z)
 		)
-		return INTERSECT_OUTSIDE;
+		return IntersectResult::Outside;
 	if(AABBInAABB(minA,maxA,minB,maxB) || AABBInAABB(minB,maxB,minA,maxA))
-		return INTERSECT_INSIDE;
-	return INTERSECT_OVERLAP;
+		return IntersectResult::Inside;
+	return IntersectResult::Overlap;
 }
 
 bool vmf::Intersect::AABBAABB(AABB *a,AABB *b)
@@ -70,7 +70,7 @@ bool vmf::Intersect::AABBTriangle(glm::vec3 min,glm::vec3 max,glm::vec3 a,glm::v
 	uvec::min(&minTri,c);
 	uvec::max(&maxTri,b);
 	uvec::max(&maxTri,c);
-	if(AABBAABB(min,max,minTri,maxTri) == INTERSECT_OUTSIDE)
+	if(AABBAABB(min,max,minTri,maxTri) == IntersectResult::Outside)
 		return false;
 	// TODO
 	return true;

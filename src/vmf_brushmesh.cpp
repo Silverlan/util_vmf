@@ -38,7 +38,7 @@ bool vmf::BrushMesh::IntersectAABB(glm::vec3 &pos,glm::vec3 &posNew,glm::vec3 &e
 
 bool vmf::BrushMesh::IntersectAABB(glm::vec3 *min,glm::vec3 *max)
 {
-	if(vmf::Intersect::AABBAABB(m_min,m_max,*min,*max) == INTERSECT_OUTSIDE)
+	if(vmf::Intersect::AABBAABB(m_min,m_max,*min,*max) == IntersectResult::Outside)
 		return false;
 	return true;
 }
