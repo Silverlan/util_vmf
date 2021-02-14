@@ -65,7 +65,8 @@ void vmf::PolyMesh::BuildPolyMeshInfo()
 				}
 				return false;
 			};
-			fFindTexture(mat->GetDataBlock());
+			if(mat->GetDataBlock())
+				fFindTexture(mat->GetDataBlock());
 		}
 		if(texInfo == nullptr)
 		{
