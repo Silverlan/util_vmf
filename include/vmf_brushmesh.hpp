@@ -11,6 +11,8 @@
 
 namespace vmf
 {
+	class BrushMesh;
+	std::ostream &operator<<(std::ostream& os,const vmf::BrushMesh& mesh);
 	class BrushMesh
 	{
 		friend std::ostream& operator<<(std::ostream&,const BrushMesh&);

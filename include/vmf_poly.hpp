@@ -31,6 +31,8 @@ namespace vmf
 	const short CLASSIFY_SPANNING = 3;
 
 	const double EPSILON = 4.9406564584125e-2;//4.9406564584125e-4;//4.94065645841247e-324;
+	class Poly;
+	std::ostream& operator<<(std::ostream &os,const vmf::Poly &poly);
 	class Poly
 	{
 	public:
