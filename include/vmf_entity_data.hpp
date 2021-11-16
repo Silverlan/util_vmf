@@ -7,7 +7,7 @@
 
 #include <map>
 #include <vector>
-#include <fsys/filesystem.h>
+#include  <sharedutils/util_ifile.hpp>
 
 namespace vmf
 {
@@ -39,7 +39,7 @@ namespace vmf
 	private:
 		DataFile()=delete;
 	public:
-		static DataFileBlock *ReadBlock(VFilePtr f,uint64_t readUntil=std::numeric_limits<uint64_t>::max());
+		static DataFileBlock *ReadBlock(ufile::IFile &f,uint64_t readUntil=std::numeric_limits<uint64_t>::max());
 		static DataFileBlock *Read(const char *f);
 	};
 };

@@ -4,20 +4,25 @@
 
 #include "vmf_entity_data.hpp"
 #include <sharedutils/util_string.h>
+#include <fsys/filesystem.h>
+#include <fsys/ifile.hpp>
 
 vmf::DataFileBlock *vmf::DataFile::Read(const char *fName)
 {
-	auto f = FileManager::OpenFile(fName,"r");
+	auto fptr = FileManager::OpenFile(fName,"r");
+	if(!fptr)
+		return nullptr;
+	fsys::File f {fptr};
 	DataFileBlock *block = ReadBlock(f);
 	return block;
 }
 
-vmf::DataFileBlock *vmf::DataFile::ReadBlock(VFilePtr f,uint64_t readUntil)
+vmf::DataFileBlock *vmf::DataFile::ReadBlock(ufile::IFile &f,uint64_t readUntil)
 {
 	DataFileBlock *block = new DataFileBlock;
-	while(!f->Eof() && f->Tell() < readUntil)
+	while(!f.Eof() && f.Tell() < readUntil)
 	{
-		std::string sbuf = f->ReadLine();
+		std::string sbuf = f.ReadLine();
 		if(sbuf.length() > 0 && sbuf[0] != '\0')
 		{
 			ustring::remove_whitespace(sbuf);
@@ -50,7 +55,7 @@ vmf::DataFileBlock *vmf::DataFile::ReadBlock(VFilePtr f,uint64_t readUntil)
 					if(sbuf != "{")
 					{
 						char c;
-						do c = static_cast<char>(f->ReadChar());
+						do c = static_cast<char>(f.ReadChar());
 						while(c != '{' && c != EOF);
 					}
 					std::map<std::string,std::vector<DataFileBlock*>*>::iterator i = block->blocks.find(blockName);
