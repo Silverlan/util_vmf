@@ -47,7 +47,7 @@ namespace vmf
 		glm::vec3 m_min;
 		glm::vec3 m_max;
 		glm::vec3 m_centerOfMass;
-		MaterialHandle m_material = {};
+		msys::MaterialHandle m_material = {};
 		std::optional<TextureData> m_texData = {};
 		std::optional<DispInfo> m_displacement = {};
 		PolyInfo m_compiledData;

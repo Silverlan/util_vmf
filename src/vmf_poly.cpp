@@ -39,7 +39,7 @@ void vmf::Poly::RemoveDisplacement()
 		return;
 	m_displacement = {};
 	auto *mat = m_materialLoader("tools/toolsnodraw");
-	m_material = mat ? mat->GetHandle() : MaterialHandle{};
+	m_material = mat ? mat->GetHandle() : msys::MaterialHandle{};
 }
 
 vmf::PolyInfo &vmf::Poly::GetCompiledData() {return m_compiledData;}
@@ -71,13 +71,14 @@ void vmf::Poly::SetTextureData(std::string texture,glm::vec3 nu,glm::vec3 nv,flo
 	m_texData->sv = sv;
 	m_texData->rot = rot;
 
-	m_material = m_materialLoader(texture.c_str());
+	auto *mat = m_materialLoader(texture.c_str());
+	m_material = mat ? mat->GetHandle() : nullptr;
 }
 
 vmf::TextureData *vmf::Poly::GetTextureData() {return m_texData.has_value() ? &*m_texData : nullptr;}
 
 Material *vmf::Poly::GetMaterial() {return m_material.get();}
-void vmf::Poly::SetMaterial(Material *material) {m_material = material;}
+void vmf::Poly::SetMaterial(Material *material) {m_material = material ? material->GetHandle() : msys::MaterialHandle{};}
 
 void vmf::Poly::SetMaterialId(uint32_t id) {m_materialId = id;}
 uint32_t vmf::Poly::GetMaterialId() const {return m_materialId;}
