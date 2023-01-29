@@ -5,8 +5,7 @@
 #ifndef __UTIL_VMF_HPP__
 #define __UTIL_VMF_HPP__
 
-namespace vmf
-{
+namespace vmf {
 
 };
 

@@ -4,57 +4,58 @@
 
 #include "vmf_plane.hpp"
 
-vmf::Plane::Plane(glm::vec3 *a,glm::vec3 *b,glm::vec3 *c)
+vmf::Plane::Plane(glm::vec3 *a, glm::vec3 *b, glm::vec3 *c)
 {
-	glm::vec3 n = glm::cross(*b -*a,*c -*a);
+	glm::vec3 n = glm::cross(*b - *a, *c - *a);
 	uvec::normalize(&n);
-	double d = glm::dot(-n,*a);
-	Plane(n,d);
+	double d = glm::dot(-n, *a);
+	Plane(n, d);
 }
 
-vmf::Plane::Plane(glm::vec3 n,glm::vec3 *pos)
+vmf::Plane::Plane(glm::vec3 n, glm::vec3 *pos)
 {
 	m_normal = n;
 	MoveToPos(pos);
 }
 
-vmf::Plane::Plane(glm::vec3 n,double d)
+vmf::Plane::Plane(glm::vec3 n, double d)
 {
 	m_normal = n;
 	m_distance = d;
-	m_pos.x = n.x *-static_cast<float>(d);
-	m_pos.y = n.y *-static_cast<float>(d);
-	m_pos.z = n.z *-static_cast<float>(d);
+	m_pos.x = n.x * -static_cast<float>(d);
+	m_pos.y = n.y * -static_cast<float>(d);
+	m_pos.z = n.z * -static_cast<float>(d);
 }
 
-glm::vec3 *vmf::Plane::GetNormal() {return &m_normal;}
+glm::vec3 *vmf::Plane::GetNormal() { return &m_normal; }
 
 void vmf::Plane::MoveToPos(glm::vec3 *pos)
 {
 	glm::vec3 n = *GetNormal();
-	double dNew = glm::dot(n,*pos);
+	double dNew = glm::dot(n, *pos);
 	m_distance = -dNew;
-	m_pos = n *float(dNew);
+	m_pos = n * float(dNew);
 }
 
 void vmf::Plane::Rotate(EulerAngles &ang)
 {
 	glm::vec3 n = *GetNormal();
-	uvec::rotate(&n,EulerAngles(ang));
+	uvec::rotate(&n, EulerAngles(ang));
 	m_normal = n;
 }
 
-bool vmf::Plane::GetPlaneIntersection(glm::vec3 *intersect,glm::vec3 *na,glm::vec3 *nb,glm::vec3 *nc,double da,double db,double dc)
+bool vmf::Plane::GetPlaneIntersection(glm::vec3 *intersect, glm::vec3 *na, glm::vec3 *nb, glm::vec3 *nc, double da, double db, double dc)
 {
-	float denom = glm::dot(*na,glm::cross(*nb,*nc));
-	if(denom == 0) return false;
-	glm::vec3 crossbc = glm::cross(*nb,*nc);
-	glm::vec3 crossca = glm::cross(*nc,*na);
-	glm::vec3 crossab = glm::cross(*na,*nb);
-	uvec::mul(&crossbc,-da);
-	uvec::mul(&crossca,-db);
-	uvec::mul(&crossab,-dc);
-	*intersect = crossbc +crossca +crossab;
-	uvec::div(intersect,denom);
+	float denom = glm::dot(*na, glm::cross(*nb, *nc));
+	if(denom == 0)
+		return false;
+	glm::vec3 crossbc = glm::cross(*nb, *nc);
+	glm::vec3 crossca = glm::cross(*nc, *na);
+	glm::vec3 crossab = glm::cross(*na, *nb);
+	uvec::mul(&crossbc, -da);
+	uvec::mul(&crossca, -db);
+	uvec::mul(&crossab, -dc);
+	*intersect = crossbc + crossca + crossab;
+	uvec::div(intersect, denom);
 	return true;
 }

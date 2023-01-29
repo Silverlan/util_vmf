@@ -6,8 +6,7 @@
 #include "vmf_brushmesh.hpp"
 #include "vmf_plane.hpp"
 
-vmf::PolyMesh::PolyMesh()
-	: m_bHasDisplacements(false),m_bValid(true)
+vmf::PolyMesh::PolyMesh() : m_bHasDisplacements(false), m_bValid(true)
 {
 	m_min.x = 0;
 	m_min.y = 0;
@@ -26,11 +25,11 @@ vmf::PolyMesh::PolyMesh()
 
 vmf::PolyMesh::~PolyMesh()
 {
-	for(int i=0;i<m_polys.size();i++)
+	for(int i = 0; i < m_polys.size(); i++)
 		delete m_polys[i];
 	if(m_centerLocalized != NULL)
 		delete m_centerLocalized;
-	for(int i=0;i<m_vertices.size();i++)
+	for(int i = 0; i < m_vertices.size(); i++)
 		delete m_vertices[i];
 }
 
@@ -40,11 +39,9 @@ void vmf::PolyMesh::Validate()
 		return;
 	auto bHasDisp = m_bHasDisplacements;
 	auto bCheck = false;
-	for(auto it=m_polys.begin();it!=m_polys.end();++it)
-	{
+	for(auto it = m_polys.begin(); it != m_polys.end(); ++it) {
 		auto *poly = *it;
-		if(poly->IsDisplacement())
-		{
+		if(poly->IsDisplacement()) {
 			bCheck = true;
 			break;
 		}
@@ -52,33 +49,31 @@ void vmf::PolyMesh::Validate()
 	if(bCheck == false)
 		m_bValid = false;
 }
-bool vmf::PolyMesh::IsValid() {return m_bValid;}
+bool vmf::PolyMesh::IsValid() { return m_bValid; }
 
-vmf::PolyMeshInfo &vmf::PolyMesh::GetCompiledData() {return m_compiledData;}
+vmf::PolyMeshInfo &vmf::PolyMesh::GetCompiledData() { return m_compiledData; }
 
-bool vmf::PolyMesh::HasDisplacements() {return m_bHasDisplacements;}
-void vmf::PolyMesh::SetHasDisplacements(bool b) {m_bHasDisplacements = b;}
+bool vmf::PolyMesh::HasDisplacements() { return m_bHasDisplacements; }
+void vmf::PolyMesh::SetHasDisplacements(bool b) { m_bHasDisplacements = b; }
 
-void vmf::PolyMesh::GenerateBrushMeshes(std::vector<BrushMesh*> *brushMeshes,std::vector<PolyMesh*> meshes)
+void vmf::PolyMesh::GenerateBrushMeshes(std::vector<BrushMesh *> *brushMeshes, std::vector<PolyMesh *> meshes)
 {
-	for(int i=0;i<meshes.size();i++)
-	{
+	for(int i = 0; i < meshes.size(); i++) {
 		BrushMesh *mesh = new BrushMesh();
-		std::vector<Poly*> *polys;
+		std::vector<Poly *> *polys;
 		meshes[i]->GetPolys(&polys);
-		for(int j=0;j<polys->size();j++)
-		{
+		for(int j = 0; j < polys->size(); j++) {
 			Poly *poly = (*polys)[j];
 			std::vector<Vertex> &polyVerts = poly->GetVertices();
 			std::vector<glm::vec3> *vertexList = new std::vector<glm::vec3>;
-			for(int i=0;i<polyVerts.size();i++)
+			for(int i = 0; i < polyVerts.size(); i++)
 				vertexList->push_back(polyVerts[i].pos);
 			std::vector<glm::vec3> *verts = new std::vector<glm::vec3>;
 			std::vector<glm::vec2> *uvs = new std::vector<glm::vec2>;
 			std::vector<glm::vec3> *normals = new std::vector<glm::vec3>;
-			poly->GenerateTriangleMesh(verts,uvs,normals);
+			poly->GenerateTriangleMesh(verts, uvs, normals);
 			TextureData *texture = poly->GetTextureData();
-			Side *side = new Side(vertexList,verts,uvs,normals,texture->texture);
+			Side *side = new Side(vertexList, verts, uvs, normals, texture->texture);
 			mesh->AddSide(side);
 		}
 		mesh->Calculate();
@@ -86,84 +81,70 @@ void vmf::PolyMesh::GenerateBrushMeshes(std::vector<BrushMesh*> *brushMeshes,std
 	}
 }
 
-glm::vec3 *vmf::PolyMesh::GetLocalizedCenter() {return m_centerLocalized;}
+glm::vec3 *vmf::PolyMesh::GetLocalizedCenter() { return m_centerLocalized; }
 
-void vmf::PolyMesh::AddPoly(Poly *poly) {m_polys.push_back(poly);}
+void vmf::PolyMesh::AddPoly(Poly *poly) { m_polys.push_back(poly); }
 
-unsigned int vmf::PolyMesh::GetPolyCount() {return static_cast<unsigned int>(m_polys.size());}
+unsigned int vmf::PolyMesh::GetPolyCount() { return static_cast<unsigned int>(m_polys.size()); }
 
 int vmf::PolyMesh::BuildPolyMesh()
 {
 	int numPolys = static_cast<int>(m_polys.size());
-	for(int i=0;i<numPolys -2;i++)
-	{
-		for(int j=i +1;j<numPolys -1;j++)
-		{
-			for(int k=j +1;k<numPolys;k++)
-			{
+	for(int i = 0; i < numPolys - 2; i++) {
+		for(int j = i + 1; j < numPolys - 1; j++) {
+			for(int k = j + 1; k < numPolys; k++) {
 				bool legal = true;
 				Poly *a = m_polys[i];
 				Poly *b = m_polys[j];
 				Poly *c = m_polys[k];
-				
+
 				glm::vec3 intersect;
 				auto na = a->GetNormal();
 				auto nb = b->GetNormal();
 				auto nc = c->GetNormal();
-				bool bIntersect = vmf::Plane::GetPlaneIntersection(&intersect,&na,&nb,&nc,a->GetDistance(),b->GetDistance(),c->GetDistance());
-				if(bIntersect)
-				{
-					for(int m=0;m<numPolys;m++)
-					{
+				bool bIntersect = vmf::Plane::GetPlaneIntersection(&intersect, &na, &nb, &nc, a->GetDistance(), b->GetDistance(), c->GetDistance());
+				if(bIntersect) {
+					for(int m = 0; m < numPolys; m++) {
 						Poly *poly = m_polys[m];
-						float dotProd = -glm::dot(poly->GetNormal(),intersect);
+						float dotProd = -glm::dot(poly->GetNormal(), intersect);
 						double d = poly->GetDistance();
-						if(dotProd -d > EPSILON) {
+						if(dotProd - d > EPSILON) {
 							legal = false;
 							break;
 						}
 					}
-					if(legal)
-					{
+					if(legal) {
 						glm::vec3 na = a->GetNormal();
-						uvec::mul(&na,-1);
-						a->AddUniqueVertex(intersect,na);
+						uvec::mul(&na, -1);
+						a->AddUniqueVertex(intersect, na);
 
 						glm::vec3 nb = b->GetNormal();
-						uvec::mul(&nb,-1);
-						b->AddUniqueVertex(intersect,nb);
+						uvec::mul(&nb, -1);
+						b->AddUniqueVertex(intersect, nb);
 
 						glm::vec3 nc = c->GetNormal();
-						uvec::mul(&nc,-1);
-						c->AddUniqueVertex(intersect,nc);
+						uvec::mul(&nc, -1);
+						c->AddUniqueVertex(intersect, nc);
 					}
 				}
 			}
 		}
 	}
 	auto bHasDisplacement = false;
-	for(int i=0;i<numPolys;i++)
-	{
-		if(m_polys[i]->IsDisplacement())
-		{
+	for(int i = 0; i < numPolys; i++) {
+		if(m_polys[i]->IsDisplacement()) {
 			bHasDisplacement = true;
 			unsigned int numPolys = m_polys[i]->GetVertexCount();
 			if(numPolys != 4)
 				return -1;
 		}
 		m_polys[i]->SortVertices();
-		if(m_polys[i]->IsDisplacement())
-		{
+		if(m_polys[i]->IsDisplacement()) {
 			DispInfo *info = m_polys[i]->GetDisplacement();
 			std::vector<Vertex> &vertices = m_polys[i]->GetVertices();
-			for(unsigned int i=0;i<vertices.size();i++)
-			{
+			for(unsigned int i = 0; i < vertices.size(); i++) {
 				Vertex &v = vertices[i];
-				if(fabsf(v.pos.x -info->startposition.x) <= EPSILON &&
-					fabsf(v.pos.y -info->startposition.y) <= EPSILON &&
-					fabsf(v.pos.z -info->startposition.z) <= EPSILON
-				)
-				{
+				if(fabsf(v.pos.x - info->startposition.x) <= EPSILON && fabsf(v.pos.y - info->startposition.y) <= EPSILON && fabsf(v.pos.z - info->startposition.z) <= EPSILON) {
 					info->startpositionId = i;
 					break;
 				}
@@ -179,36 +160,34 @@ static unsigned short POLYMESH_ERROR_LEVEL = 0;
 void vmf::PolyMesh::Calculate()
 {
 	unsigned int numPolys = GetPolyCount();
-	glm::vec3 pos(0,0,0);
+	glm::vec3 pos(0, 0, 0);
 	uvec::max(&m_min);
 	uvec::min(&m_max);
 	uvec::zero(&m_centerOfMass);
-	for(int i=numPolys -1;i>=0;i--)
-	{
-		if(!m_polys[i]->IsValid())
-		{
+	for(int i = numPolys - 1; i >= 0; i--) {
+		if(!m_polys[i]->IsValid()) {
 			if(POLYMESH_ERROR_LEVEL > 0)
-				std::cout<<"WARNING: Invalid polygon '("<<*m_polys[i]<<")' for mesh '"<<*this<<"': Less than 3 vertices. Removing..."<<std::endl;
+				std::cout << "WARNING: Invalid polygon '(" << *m_polys[i] << ")' for mesh '" << *this << "': Less than 3 vertices. Removing..." << std::endl;
 			delete m_polys[i];
-			m_polys.erase(m_polys.begin() +i);
+			m_polys.erase(m_polys.begin() + i);
 			numPolys--;
 		}
-		else
-		{
-			uvec::add(&pos,m_polys[i]->GetCenter());
-			uvec::add(&m_centerOfMass,*m_polys[i]->GetWorldPosition());
+		else {
+			uvec::add(&pos, m_polys[i]->GetCenter());
+			uvec::add(&m_centerOfMass, *m_polys[i]->GetWorldPosition());
 			std::vector<Vertex> &vertices = m_polys[i]->GetVertices();
-			for(int j=0;j<vertices.size();j++)
-			{
+			for(int j = 0; j < vertices.size(); j++) {
 				Vertex &v = vertices[j];
 				glm::vec3 vThis;
 				//glm::vec3 *vNew = new glm::vec3(v->pos);
-				if(HasVertex(&v,&vThis)) uvec::match(&v.pos,vThis); // Make sure the vertex in the polygon is the same as ours
-				else m_vertices.push_back(new glm::vec3(v.pos));
-				glm::vec3 min,max;
-				m_polys[i]->GetBounds(&min,&max);
-				uvec::min(&m_min,min);
-				uvec::max(&m_max,max);
+				if(HasVertex(&v, &vThis))
+					uvec::match(&v.pos, vThis); // Make sure the vertex in the polygon is the same as ours
+				else
+					m_vertices.push_back(new glm::vec3(v.pos));
+				glm::vec3 min, max;
+				m_polys[i]->GetBounds(&min, &max);
+				uvec::min(&m_min, min);
+				uvec::max(&m_max, max);
 			}
 		}
 	}
@@ -219,24 +198,23 @@ void vmf::PolyMesh::Calculate()
 	m_max -= m_centerOfMass;
 }
 
-glm::vec3 *vmf::PolyMesh::GetWorldPosition() {return &m_centerOfMass;}
+glm::vec3 *vmf::PolyMesh::GetWorldPosition() { return &m_centerOfMass; }
 
 void vmf::PolyMesh::debug_print()
 {
-	std::cout<<"Mesh '"<<*this<<"':"<<std::endl;
-	for(int i=0;i<m_vertices.size();i++)
-		std::cout<<"\tVertex "<<i<<": ("<<m_vertices[i]->x<<","<<m_vertices[i]->y<<","<<m_vertices[i]->z<<")"<<std::endl;
-	std::cout<<"Polys:"<<std::endl;
-	for(int i=0;i<m_polys.size();i++)
+	std::cout << "Mesh '" << *this << "':" << std::endl;
+	for(int i = 0; i < m_vertices.size(); i++)
+		std::cout << "\tVertex " << i << ": (" << m_vertices[i]->x << "," << m_vertices[i]->y << "," << m_vertices[i]->z << ")" << std::endl;
+	std::cout << "Polys:" << std::endl;
+	for(int i = 0; i < m_polys.size(); i++)
 		m_polys[i]->debug_print();
 }
 
 void vmf::PolyMesh::CenterPolys()
 {
-	glm::vec3 center(0,0,0);
+	glm::vec3 center(0, 0, 0);
 	unsigned int numPolys = static_cast<unsigned int>(m_polys.size());
-	for(unsigned int i=0;i<numPolys;i++)
-	{
+	for(unsigned int i = 0; i < numPolys; i++) {
 		glm::vec3 centerPoly = m_polys[i]->GetCenter();
 		center += centerPoly;
 	}
@@ -246,39 +224,34 @@ void vmf::PolyMesh::CenterPolys()
 
 void vmf::PolyMesh::Localize(const glm::vec3 &center)
 {
-	if(m_centerLocalized == NULL) m_centerLocalized = new glm::vec3(center);
-	else uvec::add(m_centerLocalized,center);
-	for(int i=0;i<m_polys.size();i++)
+	if(m_centerLocalized == NULL)
+		m_centerLocalized = new glm::vec3(center);
+	else
+		uvec::add(m_centerLocalized, center);
+	for(int i = 0; i < m_polys.size(); i++)
 		m_polys[i]->Localize(center);
 	Calculate();
 }
-void vmf::PolyMesh::Localize() {Localize(GetCenter());}
+void vmf::PolyMesh::Localize() { Localize(GetCenter()); }
 
-glm::vec3 vmf::PolyMesh::GetCenter() {return m_center;}
+glm::vec3 vmf::PolyMesh::GetCenter() { return m_center; }
 
-bool vmf::PolyMesh::HasVertex(Vertex *v,glm::vec3 *vThis)
+bool vmf::PolyMesh::HasVertex(Vertex *v, glm::vec3 *vThis)
 {
 	glm::vec3 pos = v->pos;
-	for(int i=0;i<m_vertices.size();i++)
-	{
+	for(int i = 0; i < m_vertices.size(); i++) {
 		glm::vec3 *posThis = m_vertices[i];
-		if(uvec::cmp(pos,*posThis))
-		{
+		if(uvec::cmp(pos, *posThis)) {
 			vThis->x = posThis->x;
 			vThis->y = posThis->y;
 			vThis->z = posThis->z;
 			return true;
 		}
-		else
-		{
+		else {
 			glm::vec3 diff(*posThis);
-			uvec::sub(&diff,pos);
-			if(diff.x <= EPSILON && diff.x >= -EPSILON &&
-				diff.y <= EPSILON && diff.y >= -EPSILON &&
-				diff.z <= EPSILON && diff.z >= -EPSILON)
-			{
-				if(vThis != NULL)
-				{
+			uvec::sub(&diff, pos);
+			if(diff.x <= EPSILON && diff.x >= -EPSILON && diff.y <= EPSILON && diff.y >= -EPSILON && diff.z <= EPSILON && diff.z >= -EPSILON) {
+				if(vThis != NULL) {
 					vThis->x = posThis->x;
 					vThis->y = posThis->y;
 					vThis->z = posThis->z;
@@ -290,12 +263,9 @@ bool vmf::PolyMesh::HasVertex(Vertex *v,glm::vec3 *vThis)
 	return false;
 }
 
-void vmf::PolyMesh::GetPolys(std::vector<Poly*> **polys)
-{
-	*polys = &m_polys;	
-}
+void vmf::PolyMesh::GetPolys(std::vector<Poly *> **polys) { *polys = &m_polys; }
 
-void vmf::PolyMesh::GetBounds(glm::vec3 *min,glm::vec3 *max)
+void vmf::PolyMesh::GetBounds(glm::vec3 *min, glm::vec3 *max)
 {
 	*min = m_min;
 	*max = m_max;

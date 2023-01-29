@@ -4,10 +4,6 @@
 
 #include "vmf_poly_info.hpp"
 
-vmf::PolyDispInfo::PolyDispInfo()
-	: numAlpha(0),power(0)
-{}
+vmf::PolyDispInfo::PolyDispInfo() : numAlpha(0), power(0) {}
 
-vmf::PolyInfo::PolyInfo()
-	: width(0.f),height(0.f)
-{}
+vmf::PolyInfo::PolyInfo() : width(0.f), height(0.f) {}

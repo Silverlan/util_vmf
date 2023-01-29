@@ -8,10 +8,8 @@
 #include <mathutil/uvec.h>
 #include <vector>
 
-namespace vmf
-{
-	struct DispInfo
-	{
+namespace vmf {
+	struct DispInfo {
 		unsigned int power;
 		unsigned int flags;
 		unsigned int elevation;

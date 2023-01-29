@@ -8,11 +8,9 @@
 #include <memory>
 #include <mathutil/uvec.h>
 
-namespace vmf
-{
-	class PolyDispInfo
-	{
-	public:
+namespace vmf {
+	class PolyDispInfo {
+	  public:
 		PolyDispInfo();
 		std::vector<glm::vec3> vertices;
 		std::vector<glm::vec3> normals;
@@ -26,9 +24,8 @@ namespace vmf
 		std::vector<unsigned int> powersMerged;
 	};
 
-	class PolyInfo
-	{
-	public:
+	class PolyInfo {
+	  public:
 		PolyInfo();
 		glm::vec3 nu;
 		glm::vec3 nv;
@@ -38,9 +35,8 @@ namespace vmf
 	};
 
 	class Poly;
-	class PolyMeshInfo
-	{
-	public:
+	class PolyMeshInfo {
+	  public:
 		std::vector<glm::vec3> vertexList;
 	};
 };

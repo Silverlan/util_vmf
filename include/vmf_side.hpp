@@ -8,14 +8,12 @@
 #include <vector>
 #include <mathutil/uvec.h>
 
-namespace vmf
-{
-	class Side
-	{
-	public:
-		Side(std::vector<glm::vec3> *vertexList,std::vector<glm::vec3> *verts,std::vector<glm::vec2> *uvs,std::vector<glm::vec3> *normals,std::string &material);
+namespace vmf {
+	class Side {
+	  public:
+		Side(std::vector<glm::vec3> *vertexList, std::vector<glm::vec3> *verts, std::vector<glm::vec2> *uvs, std::vector<glm::vec3> *normals, std::string &material);
 		~Side();
-	protected:
+	  protected:
 		std::vector<glm::vec3> m_vertices; // Vertices as triangles
 		std::vector<glm::vec2> m_uvs;
 		std::vector<glm::vec3> m_normals;
@@ -25,21 +23,21 @@ namespace vmf
 		glm::vec3 m_max;
 		glm::vec3 m_normal;
 		float m_distance;
-	public:
+	  public:
 		std::string &GetMaterial();
 		unsigned int GetVertexCount();
 		unsigned int GetTriangleVertexCount();
 		void CalculateBounds();
-		void GetBounds(glm::vec3 *min,glm::vec3 *max) const;
+		void GetBounds(glm::vec3 *min, glm::vec3 *max) const;
 		void GetUVCoordinates(std::vector<glm::vec2> **uvs);
 		void GetVertices(std::vector<glm::vec3> **vertices);
 		void GetTriangles(std::vector<glm::vec3> **vertices);
-		bool IsPointInside(glm::vec3 &p,double epsilon=0);
+		bool IsPointInside(glm::vec3 &p, double epsilon = 0);
 		glm::vec3 *GetNormal();
 		float GetDistance();
 	};
 };
 
-std::ostream& operator<<(std::ostream &os,const vmf::Side &side);
+std::ostream &operator<<(std::ostream &os, const vmf::Side &side);
 
 #endif

@@ -7,18 +7,18 @@
 
 #include <mathutil/uvec.h>
 
-namespace vmf
-{
-	struct Vertex
-	{
+namespace vmf {
+	struct Vertex {
 		Vector3 pos;
 		Vector3 normal;
-		double u,v;
-		Vertex() {
+		double u, v;
+		Vertex()
+		{
 			u = 0;
 			v = 0;
 		}
-		Vertex(const Vector3 &_pos,const Vector3 &_normal) {
+		Vertex(const Vector3 &_pos, const Vector3 &_normal)
+		{
 			Vertex();
 			pos = _pos;
 			normal = _normal;

@@ -9,28 +9,26 @@
 #include <mathutil/uvec.h>
 #include "vmf_side.hpp"
 
-namespace vmf
-{
+namespace vmf {
 	class BrushMesh;
-	std::ostream &operator<<(std::ostream& os,const vmf::BrushMesh& mesh);
-	class BrushMesh
-	{
-		friend std::ostream& operator<<(std::ostream&,const BrushMesh&);
-	public:
+	std::ostream &operator<<(std::ostream &os, const vmf::BrushMesh &mesh);
+	class BrushMesh {
+		friend std::ostream &operator<<(std::ostream &, const BrushMesh &);
+	  public:
 		BrushMesh();
 		~BrushMesh();
-	private:
-		std::vector<Side*> m_sides;
+	  private:
+		std::vector<Side *> m_sides;
 		glm::vec3 m_min;
 		glm::vec3 m_max;
-	public:
+	  public:
 		virtual void AddSide(Side *side);
-		void GetSides(std::vector<Side*> **sides);
-		bool IntersectAABB(glm::vec3 *min,glm::vec3 *max);
-		bool IntersectAABB(glm::vec3 &pos,glm::vec3 &posNew,glm::vec3 &extents,glm::vec3 &posObj,float *entryTime,float *exitTime,glm::vec3 *hitnormal=NULL);
+		void GetSides(std::vector<Side *> **sides);
+		bool IntersectAABB(glm::vec3 *min, glm::vec3 *max);
+		bool IntersectAABB(glm::vec3 &pos, glm::vec3 &posNew, glm::vec3 &extents, glm::vec3 &posObj, float *entryTime, float *exitTime, glm::vec3 *hitnormal = NULL);
 		void Calculate();
-		void GetBounds(glm::vec3 *min,glm::vec3 *max) const;
-		bool PointInside(glm::vec3 &p,double epsilon=0);
+		void GetBounds(glm::vec3 *min, glm::vec3 *max) const;
+		bool PointInside(glm::vec3 &p, double epsilon = 0);
 	};
 };
 

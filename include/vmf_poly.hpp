@@ -13,15 +13,13 @@
 #include <mathutil/uvec.h>
 #include <materialmanager.h>
 
-namespace vmf
-{
-	struct TextureData
-	{
+namespace vmf {
+	struct TextureData {
 		std::string texture;
 		Vector3 nu;
 		Vector3 nv;
-		float ou,ov;
-		float su,sv;
+		float ou, ov;
+		float su, sv;
 		float rot;
 	};
 
@@ -30,18 +28,17 @@ namespace vmf
 	const short CLASSIFY_ONPLANE = 2;
 	const short CLASSIFY_SPANNING = 3;
 
-	const double EPSILON = 4.9406564584125e-2;//4.9406564584125e-4;//4.94065645841247e-324;
+	const double EPSILON = 4.9406564584125e-2; //4.9406564584125e-4;//4.94065645841247e-324;
 	class Poly;
-	std::ostream& operator<<(std::ostream &os,const vmf::Poly &poly);
-	class Poly
-	{
-	public:
-		friend std::ostream& operator<<(std::ostream&,const Poly&);
-	public:
-		Poly(const std::function<Material*(const std::string&)> &fLoadMaterial);
-	protected:
+	std::ostream &operator<<(std::ostream &os, const vmf::Poly &poly);
+	class Poly {
+	  public:
+		friend std::ostream &operator<<(std::ostream &, const Poly &);
+	  public:
+		Poly(const std::function<Material *(const std::string &)> &fLoadMaterial);
+	  protected:
 		std::vector<Vertex> m_vertices;
-		glm::vec3 m_normal,m__normal;
+		glm::vec3 m_normal, m__normal;
 		glm::vec3 m_center;
 		glm::vec3 m_centerLocalized = {};
 		glm::vec3 m_min;
@@ -51,7 +48,7 @@ namespace vmf
 		std::optional<TextureData> m_texData = {};
 		std::optional<DispInfo> m_displacement = {};
 		PolyInfo m_compiledData;
-		std::function<Material*(const std::string&)> m_materialLoader = nullptr;
+		std::function<Material *(const std::string &)> m_materialLoader = nullptr;
 		uint32_t m_materialId = std::numeric_limits<uint32_t>::max();
 
 		double m_distance;
@@ -61,7 +58,7 @@ namespace vmf
 		void Calculate();
 		void CalculateNormal();
 		void CalculateTextureAxes();
-	public:
+	  public:
 		PolyInfo &GetCompiledData();
 		void SetDisplacement(const DispInfo &disp);
 		DispInfo *GetDisplacement();
@@ -70,19 +67,19 @@ namespace vmf
 		void SetNormal(glm::vec3 n);
 		double GetDistance();
 		glm::vec3 GetNormal();
-		bool AddUniqueVertex(glm::vec3 vert,glm::vec3 n);
-		void AddVertex(glm::vec3 vert,glm::vec3 n);
+		bool AddUniqueVertex(glm::vec3 vert, glm::vec3 n);
+		void AddVertex(glm::vec3 vert, glm::vec3 n);
 		bool HasVertex(glm::vec3 *vert);
 		unsigned int GetVertexCount();
 		bool IsValid();
 		virtual void SortVertices();
 		glm::vec3 GetCenter();
 		std::vector<Vertex> &GetVertices();
-		void GetBounds(glm::vec3 *min,glm::vec3 *max);
+		void GetBounds(glm::vec3 *min, glm::vec3 *max);
 		void Localize(const glm::vec3 &center);
 		void debug_print();
-		bool GenerateTriangleMesh(std::vector<glm::vec3> *verts,std::vector<glm::vec2> *uvs,std::vector<glm::vec3> *normals);
-		virtual void SetTextureData(std::string texture,glm::vec3 nu,glm::vec3 nv,float ou,float ov,float su,float sv,float rot=0);
+		bool GenerateTriangleMesh(std::vector<glm::vec3> *verts, std::vector<glm::vec2> *uvs, std::vector<glm::vec3> *normals);
+		virtual void SetTextureData(std::string texture, glm::vec3 nu, glm::vec3 nv, float ou, float ov, float su, float sv, float rot = 0);
 		TextureData *GetTextureData();
 		virtual Material *GetMaterial();
 		glm::vec3 *GetWorldPosition();
