@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "vmf_poly_mesh.hpp"
+#include <cassert>
 
 void vmf::PolyMesh::BuildPolyMeshInfo()
 {
