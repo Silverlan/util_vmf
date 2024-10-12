@@ -2,16 +2,22 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "vmf_poly.hpp"
-#include <sharedutils/util_string.h>
+module;
 
-std::ostream &vmf::operator<<(std::ostream &os, const vmf::Poly &poly)
+#include <sharedutils/util_string.h>
+#include <materialmanager.h>
+
+module source_engine.vmf;
+
+import :poly;
+
+std::ostream &source_engine::vmf::operator<<(std::ostream &os, const source_engine::vmf::Poly &poly)
 {
 	os << "Poly[" << &poly << "] [" << poly.m_vertices.size() << "] [" << poly.m__normal.x << " " << poly.m__normal.y << " " << poly.m__normal.z << "] [" << poly.m_distance << "]";
 	return os;
 }
 
-vmf::Poly::Poly(const std::function<Material *(const std::string &)> &fLoadMaterial) : m_materialLoader(fLoadMaterial)
+source_engine::vmf::Poly::Poly(const std::function<Material *(const std::string &)> &fLoadMaterial) : m_materialLoader(fLoadMaterial)
 {
 	m_distance = 0;
 	m_normal.x = 0;
@@ -32,7 +38,7 @@ vmf::Poly::Poly(const std::function<Material *(const std::string &)> &fLoadMater
 	m_texData = {};
 }
 
-void vmf::Poly::RemoveDisplacement()
+void source_engine::vmf::Poly::RemoveDisplacement()
 {
 	if(m_displacement.has_value() == false)
 		return;
@@ -41,9 +47,9 @@ void vmf::Poly::RemoveDisplacement()
 	m_material = mat ? mat->GetHandle() : msys::MaterialHandle {};
 }
 
-vmf::PolyInfo &vmf::Poly::GetCompiledData() { return m_compiledData; }
+source_engine::vmf::PolyInfo &source_engine::vmf::Poly::GetCompiledData() { return m_compiledData; }
 
-void vmf::Poly::Merge(Poly *poly)
+void source_engine::vmf::Poly::Merge(Poly *poly)
 {
 	/*if(!IsDisplacement() || !poly->IsDisplacement())
 		return;
@@ -52,12 +58,12 @@ void vmf::Poly::Merge(Poly *poly)
 	*/
 }
 
-void vmf::Poly::SetDisplacement(const DispInfo &disp) { m_displacement = disp; }
+void source_engine::vmf::Poly::SetDisplacement(const DispInfo &disp) { m_displacement = disp; }
 
-vmf::DispInfo *vmf::Poly::GetDisplacement() { return m_displacement.has_value() ? &*m_displacement : nullptr; }
-bool vmf::Poly::IsDisplacement() { return m_displacement.has_value(); }
+source_engine::vmf::DispInfo *source_engine::vmf::Poly::GetDisplacement() { return m_displacement.has_value() ? &*m_displacement : nullptr; }
+bool source_engine::vmf::Poly::IsDisplacement() { return m_displacement.has_value(); }
 
-void vmf::Poly::SetTextureData(std::string texture, glm::vec3 nu, glm::vec3 nv, float ou, float ov, float su, float sv, float rot)
+void source_engine::vmf::Poly::SetTextureData(std::string texture, glm::vec3 nu, glm::vec3 nv, float ou, float ov, float su, float sv, float rot)
 {
 	ustring::to_lower(texture);
 	m_texData = TextureData {};
@@ -74,25 +80,25 @@ void vmf::Poly::SetTextureData(std::string texture, glm::vec3 nu, glm::vec3 nv, 
 	m_material = mat ? mat->GetHandle() : nullptr;
 }
 
-vmf::TextureData *vmf::Poly::GetTextureData() { return m_texData.has_value() ? &*m_texData : nullptr; }
+source_engine::vmf::TextureData *source_engine::vmf::Poly::GetTextureData() { return m_texData.has_value() ? &*m_texData : nullptr; }
 
-Material *vmf::Poly::GetMaterial() { return m_material.get(); }
-void vmf::Poly::SetMaterial(Material *material) { m_material = material ? material->GetHandle() : msys::MaterialHandle {}; }
+Material *source_engine::vmf::Poly::GetMaterial() { return m_material.get(); }
+void source_engine::vmf::Poly::SetMaterial(Material *material) { m_material = material ? material->GetHandle() : msys::MaterialHandle {}; }
 
-void vmf::Poly::SetMaterialId(uint32_t id) { m_materialId = id; }
-uint32_t vmf::Poly::GetMaterialId() const { return m_materialId; }
+void source_engine::vmf::Poly::SetMaterialId(uint32_t id) { m_materialId = id; }
+uint32_t source_engine::vmf::Poly::GetMaterialId() const { return m_materialId; }
 
-void vmf::Poly::SetDistance(double d) { m_distance = d; }
-void vmf::Poly::SetNormal(glm::vec3 n)
+void source_engine::vmf::Poly::SetDistance(double d) { m_distance = d; }
+void source_engine::vmf::Poly::SetNormal(glm::vec3 n)
 {
 	m__normal.x = n.x;
 	m__normal.y = n.y;
 	m__normal.z = n.z;
 }
 
-glm::vec3 vmf::Poly::GetCalculatedNormal() { return m_normal; }
+glm::vec3 source_engine::vmf::Poly::GetCalculatedNormal() { return m_normal; }
 
-const short vmf::Poly::ClassifyPoint(glm::vec3 *point)
+const short source_engine::vmf::Poly::ClassifyPoint(glm::vec3 *point)
 {
 	glm::vec3 pos = GetCalculatedNormal() * float(-GetDistance());
 	glm::vec3 v = (pos - (*point));
@@ -105,17 +111,17 @@ const short vmf::Poly::ClassifyPoint(glm::vec3 *point)
 	return CLASSIFY_ONPLANE;
 }
 
-bool vmf::Poly::IsValid()
+bool source_engine::vmf::Poly::IsValid()
 {
 	if(IsDisplacement())
 		return true;
 	return GetVertexCount() >= 3;
 }
 
-double vmf::Poly::GetDistance() { return m_distance; }
-glm::vec3 vmf::Poly::GetNormal() { return m__normal; }
+double source_engine::vmf::Poly::GetDistance() { return m_distance; }
+glm::vec3 source_engine::vmf::Poly::GetNormal() { return m__normal; }
 
-bool vmf::Poly::HasVertex(glm::vec3 *vert)
+bool source_engine::vmf::Poly::HasVertex(glm::vec3 *vert)
 {
 	for(auto &vertex : m_vertices) {
 		glm::vec3 v = vertex.pos;
@@ -127,7 +133,7 @@ bool vmf::Poly::HasVertex(glm::vec3 *vert)
 	return false;
 }
 
-bool vmf::Poly::AddUniqueVertex(glm::vec3 vert, glm::vec3 n)
+bool source_engine::vmf::Poly::AddUniqueVertex(glm::vec3 vert, glm::vec3 n)
 {
 	if(HasVertex(&vert))
 		return false;
@@ -135,18 +141,18 @@ bool vmf::Poly::AddUniqueVertex(glm::vec3 vert, glm::vec3 n)
 	return true;
 }
 
-void vmf::Poly::AddVertex(glm::vec3 vert, glm::vec3 n) { m_vertices.push_back(Vertex(vert, n)); }
+void source_engine::vmf::Poly::AddVertex(glm::vec3 vert, glm::vec3 n) { m_vertices.push_back(Vertex(vert, n)); }
 
-unsigned int vmf::Poly::GetVertexCount() { return static_cast<unsigned int>(m_vertices.size()); }
+unsigned int source_engine::vmf::Poly::GetVertexCount() { return static_cast<unsigned int>(m_vertices.size()); }
 
-void vmf::Poly::debug_print()
+void source_engine::vmf::Poly::debug_print()
 {
 	std::cout << "Poly '" << *this << "':" << std::endl;
 	for(int i = 0; i < m_vertices.size(); i++)
 		std::cout << "\tVertex (" << m_vertices[i].pos.x << "," << m_vertices[i].pos.y << "," << m_vertices[i].pos.z << ")" << std::endl;
 }
 
-void vmf::Poly::SortVertices()
+void source_engine::vmf::Poly::SortVertices()
 {
 	if(!IsValid())
 		return;
@@ -198,7 +204,7 @@ void vmf::Poly::SortVertices()
 	CalculateTextureAxes();
 }
 
-bool vmf::Poly::CalculatePlane()
+bool source_engine::vmf::Poly::CalculatePlane()
 {
 	if(!IsValid())
 		return false;
@@ -226,9 +232,9 @@ bool vmf::Poly::CalculatePlane()
 	return true;
 }
 
-glm::vec3 *vmf::Poly::GetWorldPosition() { return &m_centerOfMass; }
+glm::vec3 *source_engine::vmf::Poly::GetWorldPosition() { return &m_centerOfMass; }
 
-void vmf::Poly::CalculateBounds()
+void source_engine::vmf::Poly::CalculateBounds()
 {
 	glm::vec3 center = GetCenter();
 	glm::vec3 min;
@@ -247,9 +253,9 @@ void vmf::Poly::CalculateBounds()
 	m_max = max;
 }
 
-glm::vec3 vmf::Poly::GetCenter() { return m_center; }
+glm::vec3 source_engine::vmf::Poly::GetCenter() { return m_center; }
 
-void vmf::Poly::ReverseVertexOrder()
+void source_engine::vmf::Poly::ReverseVertexOrder()
 {
 	unsigned int numVerts = static_cast<unsigned int>(m_vertices.size());
 	unsigned int h = static_cast<unsigned int>(numVerts * 0.5f);
@@ -260,9 +266,9 @@ void vmf::Poly::ReverseVertexOrder()
 	}
 }
 
-std::vector<vmf::Vertex> &vmf::Poly::GetVertices() { return m_vertices; }
+std::vector<source_engine::vmf::Vertex> &source_engine::vmf::Poly::GetVertices() { return m_vertices; }
 
-void vmf::Poly::GetBounds(glm::vec3 *min, glm::vec3 *max)
+void source_engine::vmf::Poly::GetBounds(glm::vec3 *min, glm::vec3 *max)
 {
 	min->x = m_min.x;
 	min->y = m_min.y;
@@ -272,7 +278,7 @@ void vmf::Poly::GetBounds(glm::vec3 *min, glm::vec3 *max)
 	max->z = m_max.z;
 }
 
-void vmf::Poly::Localize(const glm::vec3 &center)
+void source_engine::vmf::Poly::Localize(const glm::vec3 &center)
 {
 	uvec::add(&m_centerLocalized, center);
 	for(int i = 0; i < m_vertices.size(); i++)
@@ -280,7 +286,7 @@ void vmf::Poly::Localize(const glm::vec3 &center)
 	Calculate();
 }
 
-void vmf::Poly::CalculateTextureAxes()
+void source_engine::vmf::Poly::CalculateTextureAxes()
 {
 	TextureData *texData = GetTextureData();
 	if(texData == NULL)
@@ -311,7 +317,7 @@ void vmf::Poly::CalculateTextureAxes()
 	}
 }
 
-void vmf::Poly::Calculate()
+void source_engine::vmf::Poly::Calculate()
 {
 	CalculateNormal();
 	CalculatePlane();
@@ -319,7 +325,7 @@ void vmf::Poly::Calculate()
 	// TODO: CalculateTextureAxes()
 }
 
-void vmf::Poly::CalculateNormal()
+void source_engine::vmf::Poly::CalculateNormal()
 {
 	unsigned int numVerts = static_cast<unsigned int>(m_vertices.size());
 	if(numVerts < 2)
@@ -333,7 +339,7 @@ void vmf::Poly::CalculateNormal()
 	SetDistance(d);
 }
 
-bool vmf::Poly::GenerateTriangleMesh(std::vector<glm::vec3> *verts, std::vector<glm::vec2> *uvs, std::vector<glm::vec3> *normals)
+bool source_engine::vmf::Poly::GenerateTriangleMesh(std::vector<glm::vec3> *verts, std::vector<glm::vec2> *uvs, std::vector<glm::vec3> *normals)
 {
 	if(!IsValid())
 		return false;

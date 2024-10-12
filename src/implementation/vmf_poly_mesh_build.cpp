@@ -2,10 +2,18 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "vmf_poly_mesh.hpp"
-#include <cassert>
+module;
 
-void vmf::PolyMesh::BuildPolyMeshInfo()
+#include <cassert>
+#include <string>
+#include <mathutil/uvec.h>
+#include <materialmanager.h>
+
+module source_engine.vmf;
+
+import :polymesh;
+
+void source_engine::vmf::PolyMesh::BuildPolyMeshInfo()
 {
 	static std::vector<std::string> matMissing;
 	auto bDisp = HasDisplacements();
@@ -97,7 +105,7 @@ void vmf::PolyMesh::BuildPolyMeshInfo()
 	}
 }
 
-void vmf::PolyMesh::BuildDisplacement(Poly *poly, std::vector<glm::vec3> &verts, glm::vec3 &nu, glm::vec3 &nv, unsigned int w, unsigned int h, std::vector<glm::vec3> &outVertices, std::vector<glm::vec2> &outUvs, std::vector<unsigned int> &outTriangles, std::vector<glm::vec3> &faceNormals,
+void source_engine::vmf::PolyMesh::BuildDisplacement(Poly *poly, std::vector<glm::vec3> &verts, glm::vec3 &nu, glm::vec3 &nv, unsigned int w, unsigned int h, std::vector<glm::vec3> &outVertices, std::vector<glm::vec2> &outUvs, std::vector<unsigned int> &outTriangles, std::vector<glm::vec3> &faceNormals,
   unsigned char &numAlpha, std::vector<glm::vec2> *outAlphas)
 {
 	// Texture coordinates
@@ -170,7 +178,7 @@ void vmf::PolyMesh::BuildDisplacement(Poly *poly, std::vector<glm::vec3> &verts,
 #define NEIGHBOR_BOTTOM 7
 #define NEIGHBOR_BOTTOM_RIGHT 8
 
-void vmf::PolyMesh::BuildDisplacementTriangles(std::vector<glm::vec3> &sideVerts, unsigned int start, glm::vec3 &nu, glm::vec3 &nv, float sw, float sh, float ou, float ov, float su, float sv, unsigned char power, std::vector<std::vector<glm::vec3>> &normals,
+void source_engine::vmf::PolyMesh::BuildDisplacementTriangles(std::vector<glm::vec3> &sideVerts, unsigned int start, glm::vec3 &nu, glm::vec3 &nv, float sw, float sh, float ou, float ov, float su, float sv, unsigned char power, std::vector<std::vector<glm::vec3>> &normals,
   std::vector<std::vector<glm::vec3>> &offsets, std::vector<std::vector<float>> &distances, unsigned char numAlpha, std::vector<std::vector<glm::vec2>> &alphas, std::vector<glm::vec3> &outVertices, std::vector<glm::vec2> &outUvs, std::vector<unsigned int> &outTriangles,
   std::vector<glm::vec3> &faceNormals, std::vector<glm::vec2> *outAlphas)
 {
@@ -260,7 +268,7 @@ void vmf::PolyMesh::BuildDisplacementTriangles(std::vector<glm::vec3> &sideVerts
 	}
 }
 
-const double EPSILON = 4.9406564584125e-2;
+static constexpr double EPSILON = 4.9406564584125e-2;
 static void FindNeighborNormals(glm::vec3 &v, int rows, std::vector<glm::vec3> &verts, std::vector<unsigned int> &triangles, std::vector<glm::vec3> &faceNormals, std::vector<glm::vec3> &neighborNormals)
 {
 	for(auto col = 0; col < (rows - 1); col++) {
@@ -304,7 +312,7 @@ static void FindNeighborNormals(glm::vec3 &v, int rows, std::vector<glm::vec3> &
 	}
 }
 
-static std::vector<glm::vec3> GetSortedVertices(vmf::Poly *poly)
+static std::vector<glm::vec3> GetSortedVertices(source_engine::vmf::Poly *poly)
 {
 	auto &polyVerts = poly->GetVertices();
 	auto &disp = *poly->GetDisplacement();
@@ -331,7 +339,7 @@ static std::vector<glm::vec3> GetSortedVertices(vmf::Poly *poly)
 	return sortedPolyVerts;
 }
 
-void vmf::PolyMesh::BuildDisplacementNormals(std::vector<std::shared_ptr<PolyMesh>> &meshes, PolyMesh *mesh, Poly *poly, PolyInfo &info, std::vector<glm::vec3> &outNormals)
+void source_engine::vmf::PolyMesh::BuildDisplacementNormals(std::vector<std::shared_ptr<PolyMesh>> &meshes, PolyMesh *mesh, Poly *poly, PolyInfo &info, std::vector<glm::vec3> &outNormals)
 {
 	auto &displacement = *info.displacement.get();
 	auto &faceNormals = displacement.faceNormals;

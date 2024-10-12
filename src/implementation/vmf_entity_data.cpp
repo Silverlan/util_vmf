@@ -2,12 +2,17 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "vmf_entity_data.hpp"
+module;
+
 #include <sharedutils/util_string.h>
 #include <fsys/filesystem.h>
 #include <fsys/ifile.hpp>
 
-vmf::DataFileBlock *vmf::DataFile::Read(const char *fName)
+module source_engine.vmf;
+
+import :entitydata;
+
+source_engine::vmf::DataFileBlock *source_engine::vmf::DataFile::Read(const char *fName)
 {
 	auto fptr = FileManager::OpenFile(fName, "r");
 	if(!fptr)
@@ -17,7 +22,7 @@ vmf::DataFileBlock *vmf::DataFile::Read(const char *fName)
 	return block;
 }
 
-vmf::DataFileBlock *vmf::DataFile::ReadBlock(ufile::IFile &f, uint64_t readUntil)
+source_engine::vmf::DataFileBlock *source_engine::vmf::DataFile::ReadBlock(ufile::IFile &f, uint64_t readUntil)
 {
 	DataFileBlock *block = new DataFileBlock;
 	while(!f.Eof() && f.Tell() < readUntil) {

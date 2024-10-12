@@ -2,14 +2,17 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef __UTIL_BRUSHMESH_HPP__
-#define __UTIL_BRUSHMESH_HPP__
+module;
 
 #include <vector>
 #include <mathutil/uvec.h>
-#include "vmf_side.hpp"
 
-namespace vmf {
+export module source_engine.vmf:brushmesh;
+
+import :side;
+
+export namespace source_engine::vmf
+{
 	class BrushMesh;
 	std::ostream &operator<<(std::ostream &os, const vmf::BrushMesh &mesh);
 	class BrushMesh {
@@ -31,5 +34,3 @@ namespace vmf {
 		bool PointInside(glm::vec3 &p, double epsilon = 0);
 	};
 };
-
-#endif

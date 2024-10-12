@@ -2,14 +2,16 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef __VMF_ENTITY_DATA_HPP__
-#define __VMF_ENTITY_DATA_HPP__
+module;
 
 #include <map>
 #include <vector>
 #include <sharedutils/util_ifile.hpp>
 
-namespace vmf {
+export module source_engine.vmf:entitydata;
+
+export namespace source_engine::vmf
+{
 	struct DataFileBlock {
 		~DataFileBlock()
 		{
@@ -39,5 +41,3 @@ namespace vmf {
 		static DataFileBlock *Read(const char *f);
 	};
 };
-
-#endif

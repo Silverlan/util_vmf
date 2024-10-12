@@ -2,14 +2,18 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef __VMF_POLY_MESH_HPP__
-#define __VMF_POLY_MESH_HPP__
+module;
 
-#include "vmf_poly.hpp"
-#include "vmf_poly_info.hpp"
 #include <vector>
+#include <iostream>
+#include <mathutil/uvec.h>
 
-namespace vmf {
+export module source_engine.vmf:polymesh;
+
+import :poly;
+
+export namespace source_engine::vmf
+{
 	class BrushMesh;
 	class PolyMesh {
 	  public:
@@ -60,10 +64,8 @@ namespace vmf {
 	};
 };
 
-inline std::ostream &vmf::operator<<(std::ostream &os, const PolyMesh &mesh)
+inline std::ostream &source_engine::vmf::operator<<(std::ostream &os, const PolyMesh &mesh)
 {
 	os << "Mesh[" << &mesh << "] [" << mesh.m_polys.size() << "] [" << mesh.m_vertices.size() << "]";
 	return os;
 }
-
-#endif

@@ -5,7 +5,6 @@ pr_add_library(${PROJ_NAME} STATIC)
 
 pr_add_dependency(${PROJ_NAME} materialsystem TARGET PUBLIC)
 
-pr_add_headers(${PROJ_NAME} "include/")
-pr_add_sources(${PROJ_NAME} "src/")
+pr_init_module(${PROJ_NAME})
 
 pr_finalize(${PROJ_NAME})

@@ -2,12 +2,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef __VMF_VERTEX_HPP__
-#define __VMF_VERTEX_HPP__
+module;
 
 #include <mathutil/uvec.h>
 
-namespace vmf {
+export module source_engine.vmf:vertex;
+
+export namespace source_engine::vmf {
 	struct Vertex {
 		Vector3 pos;
 		Vector3 normal;
@@ -25,5 +26,3 @@ namespace vmf {
 		}
 	};
 };
-
-#endif

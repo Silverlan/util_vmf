@@ -2,12 +2,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef __VMF_INTERSECTION_HPP__
-#define __VMF_INTERSECTION_HPP__
+module;
 
 #include <mathutil/uvec.h>
 
-namespace vmf {
+export module source_engine.vmf:intersection;
+
+export namespace source_engine::vmf
+{
 	enum class IntersectResult : uint8_t { Outside = 0, Inside, Overlap };
 
 	struct AABB;
@@ -65,5 +67,3 @@ namespace vmf {
 		bool AABBWithPlane(glm::vec3 &origin, glm::vec3 &dir, glm::vec3 &ext, glm::vec3 &planeNormal, float planeDistance, float *t);
 	};
 };
-
-#endif

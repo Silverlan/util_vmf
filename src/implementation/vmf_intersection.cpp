@@ -2,32 +2,38 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "vmf_intersection.hpp"
+module;
 
-bool vmf::Intersect::VectorInBounds(glm::vec3 *vec, glm::vec3 *min, glm::vec3 *max, float EPSILON)
+#include <mathutil/uvec.h>
+
+module source_engine.vmf;
+
+import :intersection;
+
+bool source_engine::vmf::Intersect::VectorInBounds(glm::vec3 *vec, glm::vec3 *min, glm::vec3 *max, float EPSILON)
 {
 	if(EPSILON == 0.f)
 		return vec->x >= min->x && vec->y >= min->y && vec->z >= min->z && vec->x <= max->x && vec->y <= max->y && vec->z <= max->z;
 	return vec->x >= min->x - EPSILON && vec->y >= min->y - EPSILON && vec->z >= min->z - EPSILON && vec->x <= max->x + EPSILON && vec->y <= max->y + EPSILON && vec->z <= max->z + EPSILON;
 }
 
-bool vmf::Intersect::SphereSphere(glm::vec3 &originA, float rA, glm::vec3 &originB, float rB)
+bool source_engine::vmf::Intersect::SphereSphere(glm::vec3 &originA, float rA, glm::vec3 &originB, float rB)
 {
 	float dist = glm::distance(originA, originB);
 	return dist - (rA + rB) <= 0;
 }
 
-bool vmf::Intersect::AABBSphere(glm::vec3 &min, glm::vec3 &max, glm::vec3 &origin, float r)
+bool source_engine::vmf::Intersect::AABBSphere(glm::vec3 &min, glm::vec3 &max, glm::vec3 &origin, float r)
 {
 	glm::vec3 pClosest;
-	vmf::Geometry::ClosestPointOnAABBToPoint(min, max, origin, pClosest);
+	source_engine::vmf::Geometry::ClosestPointOnAABBToPoint(min, max, origin, pClosest);
 	float d = glm::distance(pClosest, origin);
 	return d <= r;
 }
 
-bool vmf::Intersect::AABBInAABB(const glm::vec3 &minA, const glm::vec3 &maxA, const glm::vec3 &minB, const glm::vec3 &maxB) { return (((minA.x >= minB.x && minA.y >= minB.y && minA.z >= minB.z) && (maxA.x <= maxB.x && maxA.y <= maxB.y && maxA.z <= maxB.z))) ? true : false; }
+bool source_engine::vmf::Intersect::AABBInAABB(const glm::vec3 &minA, const glm::vec3 &maxA, const glm::vec3 &minB, const glm::vec3 &maxB) { return (((minA.x >= minB.x && minA.y >= minB.y && minA.z >= minB.z) && (maxA.x <= maxB.x && maxA.y <= maxB.y && maxA.z <= maxB.z))) ? true : false; }
 
-vmf::IntersectResult vmf::Intersect::AABBAABB(const glm::vec3 &minA, const glm::vec3 &maxA, const glm::vec3 &minB, const glm::vec3 &maxB)
+source_engine::vmf::IntersectResult source_engine::vmf::Intersect::AABBAABB(const glm::vec3 &minA, const glm::vec3 &maxA, const glm::vec3 &minB, const glm::vec3 &maxB)
 {
 	if((maxA.x < minB.x) || (minA.x > maxB.x) || (maxA.y < minB.y) || (minA.y > maxB.y) || (maxA.z < minB.z) || (minA.z > maxB.z))
 		return IntersectResult::Outside;
@@ -36,13 +42,13 @@ vmf::IntersectResult vmf::Intersect::AABBAABB(const glm::vec3 &minA, const glm::
 	return IntersectResult::Overlap;
 }
 
-bool vmf::Intersect::AABBAABB(AABB *a, AABB *b)
+bool source_engine::vmf::Intersect::AABBAABB(AABB *a, AABB *b)
 {
 	glm::vec3 t = b->pos - a->pos;
 	return fabs(t.x) <= (a->extents.x + b->extents.x) && fabs(t.y) <= (a->extents.y + b->extents.y) && fabs(t.z) <= (a->extents.z + b->extents.z);
 }
 
-bool vmf::Intersect::AABBTriangle(glm::vec3 min, glm::vec3 max, glm::vec3 a, glm::vec3 b, glm::vec3 c)
+bool source_engine::vmf::Intersect::AABBTriangle(glm::vec3 min, glm::vec3 max, glm::vec3 a, glm::vec3 b, glm::vec3 c)
 {
 	glm::vec3 center = (min + max) * 0.5f;
 	min -= center;
@@ -62,7 +68,7 @@ bool vmf::Intersect::AABBTriangle(glm::vec3 min, glm::vec3 max, glm::vec3 a, glm
 	return true;
 }
 
-bool vmf::Intersect::LineAABB(glm::vec3 &o, glm::vec3 &d, glm::vec3 &min, glm::vec3 &max, float *tMinRes, float *tMaxRes)
+bool source_engine::vmf::Intersect::LineAABB(glm::vec3 &o, glm::vec3 &d, glm::vec3 &min, glm::vec3 &max, float *tMinRes, float *tMaxRes)
 {
 	glm::vec3 dirInv(1 / d.x, 1 / d.y, 1 / d.z);
 	const int sign[] = {dirInv.x < 0, dirInv.y < 0, dirInv.z < 0};
@@ -91,7 +97,7 @@ bool vmf::Intersect::LineAABB(glm::vec3 &o, glm::vec3 &d, glm::vec3 &min, glm::v
 	return true;
 }
 
-bool vmf::Intersect::LinePlane(glm::vec3 &o, glm::vec3 &dir, glm::vec3 &nPlane, float distPlane, float *t)
+bool source_engine::vmf::Intersect::LinePlane(glm::vec3 &o, glm::vec3 &dir, glm::vec3 &nPlane, float distPlane, float *t)
 {
 	float f = glm::dot(nPlane, dir);
 	if(f == 0)
@@ -104,7 +110,7 @@ bool vmf::Intersect::LinePlane(glm::vec3 &o, glm::vec3 &dir, glm::vec3 &nPlane, 
 
 ////////////////////////////////////
 
-void vmf::Geometry::ClosestPointOnAABBToPoint(glm::vec3 &min, glm::vec3 &max, glm::vec3 &point, glm::vec3 &res)
+void source_engine::vmf::Geometry::ClosestPointOnAABBToPoint(glm::vec3 &min, glm::vec3 &max, glm::vec3 &point, glm::vec3 &res)
 {
 	for(int i = 0; i < 3; i++) {
 		float v = point[i];
@@ -116,14 +122,14 @@ void vmf::Geometry::ClosestPointOnAABBToPoint(glm::vec3 &min, glm::vec3 &max, gl
 	}
 }
 
-void vmf::Geometry::ClosestPointOnPlaneToPoint(glm::vec3 &n, float d, glm::vec3 &p, glm::vec3 &res)
+void source_engine::vmf::Geometry::ClosestPointOnPlaneToPoint(glm::vec3 &n, float d, glm::vec3 &p, glm::vec3 &res)
 {
 	//float t = glm::dot(n,p);// -d;
 	float t = glm::dot(n, p) - d;
 	res = p - t * n;
 }
 
-void vmf::Geometry::ClosestPointOnTriangleToPoint(glm::vec3 &a, glm::vec3 &b, glm::vec3 &c, glm::vec3 &p, glm::vec3 &res)
+void source_engine::vmf::Geometry::ClosestPointOnTriangleToPoint(glm::vec3 &a, glm::vec3 &b, glm::vec3 &c, glm::vec3 &p, glm::vec3 &res)
 {
 	glm::vec3 ab = b - a;
 	glm::vec3 ac = c - a;
@@ -173,7 +179,7 @@ void vmf::Geometry::ClosestPointOnTriangleToPoint(glm::vec3 &a, glm::vec3 &b, gl
 }
 
 const float EPSILON = 1.19209e-005f;
-float vmf::Geometry::ClosestPointsBetweenLines(glm::vec3 &pA, glm::vec3 &qA, glm::vec3 &pB, glm::vec3 &qB, float &s, float &t, glm::vec3 &cA, glm::vec3 &cB)
+float source_engine::vmf::Geometry::ClosestPointsBetweenLines(glm::vec3 &pA, glm::vec3 &qA, glm::vec3 &pB, glm::vec3 &qB, float &s, float &t, glm::vec3 &cA, glm::vec3 &cB)
 {
 	glm::vec3 dA = qA - pA;
 	glm::vec3 dB = qB - pB;
@@ -223,10 +229,10 @@ float vmf::Geometry::ClosestPointsBetweenLines(glm::vec3 &pA, glm::vec3 &qA, glm
 
 ////////////////////////////////////
 
-bool vmf::Sweep::AABBWithAABB(glm::vec3 aa, glm::vec3 &ab, glm::vec3 &extA, glm::vec3 ba, glm::vec3 &bb, glm::vec3 &extB, float *entryTime, float *exitTime, glm::vec3 *normal)
+bool source_engine::vmf::Sweep::AABBWithAABB(glm::vec3 aa, glm::vec3 &ab, glm::vec3 &extA, glm::vec3 ba, glm::vec3 &bb, glm::vec3 &extB, float *entryTime, float *exitTime, glm::vec3 *normal)
 {
-	::vmf::AABB a(aa, extA);
-	::vmf::AABB b(ba, extB);
+	::source_engine::vmf::AABB a(aa, extA);
+	::source_engine::vmf::AABB b(ba, extB);
 	*entryTime = 0;
 	*exitTime = 0;
 	if(normal != NULL) {
@@ -309,7 +315,7 @@ bool vmf::Sweep::AABBWithAABB(glm::vec3 aa, glm::vec3 &ab, glm::vec3 &extA, glm:
 	return true;
 }
 
-bool vmf::Sweep::AABBWithPlane(glm::vec3 &origin, glm::vec3 &dir, glm::vec3 &ext, glm::vec3 &planeNormal, float planeDistance, float *t)
+bool source_engine::vmf::Sweep::AABBWithPlane(glm::vec3 &origin, glm::vec3 &dir, glm::vec3 &ext, glm::vec3 &planeNormal, float planeDistance, float *t)
 {
 	float r = ext.x * fabs(planeNormal.x) + ext.y * fabs(planeNormal.y) + ext.z * fabs(planeNormal.z);
 	*t = (r - planeDistance - (glm::dot(planeNormal, origin))) / glm::dot(planeNormal, dir);

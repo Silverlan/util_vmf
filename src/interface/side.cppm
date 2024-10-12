@@ -2,13 +2,15 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef __VMF_SIDE_HPP__
-#define __VMF_SIDE_HPP__
+module;
 
 #include <vector>
 #include <mathutil/uvec.h>
 
-namespace vmf {
+export module source_engine.vmf:side;
+
+export namespace source_engine::vmf
+{
 	class Side {
 	  public:
 		Side(std::vector<glm::vec3> *vertexList, std::vector<glm::vec3> *verts, std::vector<glm::vec2> *uvs, std::vector<glm::vec3> *normals, std::string &material);
@@ -38,6 +40,4 @@ namespace vmf {
 	};
 };
 
-std::ostream &operator<<(std::ostream &os, const vmf::Side &side);
-
-#endif
+export std::ostream &operator<<(std::ostream &os, const source_engine::vmf::Side &side);

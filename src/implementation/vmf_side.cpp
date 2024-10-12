@@ -2,11 +2,17 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "vmf_side.hpp"
-#include "vmf_intersection.hpp"
+module;
 
-const double EPSILON = 4.9406564584125e-2;
-vmf::Side::Side(std::vector<glm::vec3> *vertexList, std::vector<glm::vec3> *verts, std::vector<glm::vec2> *uvs, std::vector<glm::vec3> *normals, std::string &material) : m_normal(0, 0, 0), m_distance(0)
+#include <mathutil/uvec.h>
+
+module source_engine.vmf;
+
+import :intersection;
+import :side;
+
+static constexpr double EPSILON = 4.9406564584125e-2;
+source_engine::vmf::Side::Side(std::vector<glm::vec3> *vertexList, std::vector<glm::vec3> *verts, std::vector<glm::vec2> *uvs, std::vector<glm::vec3> *normals, std::string &material) : m_normal(0, 0, 0), m_distance(0)
 {
 	m_vertexList = *vertexList;
 	m_vertices = *verts;
@@ -23,7 +29,7 @@ vmf::Side::Side(std::vector<glm::vec3> *vertexList, std::vector<glm::vec3> *vert
 	CalculateBounds();
 }
 
-bool vmf::Side::IsPointInside(glm::vec3 &p, double epsilon)
+bool source_engine::vmf::Side::IsPointInside(glm::vec3 &p, double epsilon)
 {
 	if(!Intersect::VectorInBounds(&p, &m_min, &m_max, static_cast<float>(EPSILON)))
 		return false;
@@ -43,10 +49,10 @@ bool vmf::Side::IsPointInside(glm::vec3 &p, double epsilon)
 	return true;
 }
 
-glm::vec3 *vmf::Side::GetNormal() { return &m_normal; }
-float vmf::Side::GetDistance() { return m_distance; }
+glm::vec3 *source_engine::vmf::Side::GetNormal() { return &m_normal; }
+float source_engine::vmf::Side::GetDistance() { return m_distance; }
 
-void vmf::Side::CalculateBounds()
+void source_engine::vmf::Side::CalculateBounds()
 {
 	uvec::zero(&m_min);
 	uvec::zero(&m_max);
@@ -62,25 +68,25 @@ void vmf::Side::CalculateBounds()
 	}
 }
 
-void vmf::Side::GetBounds(glm::vec3 *min, glm::vec3 *max) const
+void source_engine::vmf::Side::GetBounds(glm::vec3 *min, glm::vec3 *max) const
 {
 	*min = m_min;
 	*max = m_max;
 }
 
-vmf::Side::~Side() {}
+source_engine::vmf::Side::~Side() {}
 
-unsigned int vmf::Side::GetVertexCount() { return static_cast<unsigned int>(m_vertexList.size()); }
+unsigned int source_engine::vmf::Side::GetVertexCount() { return static_cast<unsigned int>(m_vertexList.size()); }
 
-unsigned int vmf::Side::GetTriangleVertexCount() { return static_cast<unsigned int>(m_vertices.size()); }
+unsigned int source_engine::vmf::Side::GetTriangleVertexCount() { return static_cast<unsigned int>(m_vertices.size()); }
 
-std::string &vmf::Side::GetMaterial() { return m_material; }
+std::string &source_engine::vmf::Side::GetMaterial() { return m_material; }
 
-void vmf::Side::GetUVCoordinates(std::vector<glm::vec2> **uvs) { *uvs = &m_uvs; }
-void vmf::Side::GetVertices(std::vector<glm::vec3> **vertices) { *vertices = &m_vertexList; }
-void vmf::Side::GetTriangles(std::vector<glm::vec3> **vertices) { *vertices = &m_vertices; }
+void source_engine::vmf::Side::GetUVCoordinates(std::vector<glm::vec2> **uvs) { *uvs = &m_uvs; }
+void source_engine::vmf::Side::GetVertices(std::vector<glm::vec3> **vertices) { *vertices = &m_vertexList; }
+void source_engine::vmf::Side::GetTriangles(std::vector<glm::vec3> **vertices) { *vertices = &m_vertices; }
 
-std::ostream &operator<<(std::ostream &os, const vmf::Side side)
+std::ostream &operator<<(std::ostream &os, const source_engine::vmf::Side side)
 {
 	glm::vec3 min, max;
 	side.GetBounds(&min, &max);

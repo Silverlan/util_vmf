@@ -2,18 +2,21 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef __VMF_POLY_HPP__
-#define __VMF_POLY_HPP__
+module;
 
-#include "vmf_vertex.hpp"
-#include "vmf_dispinfo.hpp"
-#include "vmf_poly_info.hpp"
 #include <string>
 #include <optional>
 #include <mathutil/uvec.h>
 #include <materialmanager.h>
 
-namespace vmf {
+export module source_engine.vmf:poly;
+
+import :vertex;
+import :dispinfo;
+import :polyinfo;
+
+export namespace source_engine::vmf
+{
 	struct TextureData {
 		std::string texture;
 		Vector3 nu;
@@ -94,5 +97,3 @@ namespace vmf {
 		uint32_t GetMaterialId() const;
 	};
 };
-
-#endif

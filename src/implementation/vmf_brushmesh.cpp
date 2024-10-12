@@ -2,10 +2,17 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "vmf_brushmesh.hpp"
-#include "vmf_intersection.hpp"
+module;
 
-std::ostream &vmf::operator<<(std::ostream &os, const vmf::BrushMesh &mesh)
+#include <iostream>
+#include <mathutil/uvec.h>
+
+module source_engine.vmf;
+
+import :brushmesh;
+import :intersection;
+
+std::ostream &source_engine::vmf::operator<<(std::ostream &os, const source_engine::vmf::BrushMesh &mesh)
 {
 	glm::vec3 min, max;
 	mesh.GetBounds(&min, &max);
@@ -13,37 +20,37 @@ std::ostream &vmf::operator<<(std::ostream &os, const vmf::BrushMesh &mesh)
 	return os;
 }
 
-vmf::BrushMesh::BrushMesh()
+source_engine::vmf::BrushMesh::BrushMesh()
 {
 	uvec::zero(&m_min);
 	uvec::zero(&m_max);
 }
 
-vmf::BrushMesh::~BrushMesh()
+source_engine::vmf::BrushMesh::~BrushMesh()
 {
 	for(int i = 0; i < m_sides.size(); i++)
 		delete m_sides[i];
 }
 
-void vmf::BrushMesh::AddSide(Side *side) { m_sides.push_back(side); }
+void source_engine::vmf::BrushMesh::AddSide(Side *side) { m_sides.push_back(side); }
 
-void vmf::BrushMesh::GetSides(std::vector<Side *> **sides) { *sides = &m_sides; }
+void source_engine::vmf::BrushMesh::GetSides(std::vector<Side *> **sides) { *sides = &m_sides; }
 
-bool vmf::BrushMesh::IntersectAABB(glm::vec3 &pos, glm::vec3 &posNew, glm::vec3 &extents, glm::vec3 &posObj, float *entryTime, float *exitTime, glm::vec3 *hitnormal)
+bool source_engine::vmf::BrushMesh::IntersectAABB(glm::vec3 &pos, glm::vec3 &posNew, glm::vec3 &extents, glm::vec3 &posObj, float *entryTime, float *exitTime, glm::vec3 *hitnormal)
 {
 	glm::vec3 extentsThis = (m_max - m_min) * 0.5f;
 	glm::vec3 posThis = posObj + m_min + extentsThis;
-	return vmf::Sweep::AABBWithAABB(pos, posNew, extents, posThis, posThis, extentsThis, entryTime, exitTime, hitnormal);
+	return source_engine::vmf::Sweep::AABBWithAABB(pos, posNew, extents, posThis, posThis, extentsThis, entryTime, exitTime, hitnormal);
 }
 
-bool vmf::BrushMesh::IntersectAABB(glm::vec3 *min, glm::vec3 *max)
+bool source_engine::vmf::BrushMesh::IntersectAABB(glm::vec3 *min, glm::vec3 *max)
 {
-	if(vmf::Intersect::AABBAABB(m_min, m_max, *min, *max) == IntersectResult::Outside)
+	if(source_engine::vmf::Intersect::AABBAABB(m_min, m_max, *min, *max) == IntersectResult::Outside)
 		return false;
 	return true;
 }
 
-void vmf::BrushMesh::Calculate()
+void source_engine::vmf::BrushMesh::Calculate()
 {
 	uvec::zero(&m_min);
 	uvec::zero(&m_max);
@@ -61,13 +68,13 @@ void vmf::BrushMesh::Calculate()
 	}
 }
 
-void vmf::BrushMesh::GetBounds(glm::vec3 *min, glm::vec3 *max) const
+void source_engine::vmf::BrushMesh::GetBounds(glm::vec3 *min, glm::vec3 *max) const
 {
 	*min = m_min;
 	*max = m_max;
 }
 
-bool vmf::BrushMesh::PointInside(glm::vec3 &p, double epsilon)
+bool source_engine::vmf::BrushMesh::PointInside(glm::vec3 &p, double epsilon)
 {
 	for(int i = 0; i < m_sides.size(); i++) {
 		Side *side = m_sides[i];

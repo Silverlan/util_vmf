@@ -2,13 +2,15 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef __VMF_POLY_INFO_HPP__
-#define __VMF_POLY_INFO_HPP__
+module;
 
 #include <memory>
 #include <mathutil/uvec.h>
 
-namespace vmf {
+export module source_engine.vmf:polyinfo;
+
+export namespace source_engine::vmf
+{
 	class PolyDispInfo {
 	  public:
 		PolyDispInfo();
@@ -40,5 +42,3 @@ namespace vmf {
 		std::vector<glm::vec3> vertexList;
 	};
 };
-
-#endif

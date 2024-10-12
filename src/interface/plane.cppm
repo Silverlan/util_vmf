@@ -2,13 +2,15 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef __PLANE_HPP__
-#define __PLANE_HPP__
+module;
 
 #include <mathutil/uvec.h>
 #include <mathutil/eulerangles.h>
 
-namespace vmf {
+export module source_engine.vmf:plane;
+
+export namespace source_engine::vmf
+{
 	class Plane {
 	  public:
 		Plane(glm::vec3 *a, glm::vec3 *b, glm::vec3 *c);
@@ -25,5 +27,3 @@ namespace vmf {
 		glm::vec3 *GetNormal();
 	};
 };
-
-#endif

@@ -2,13 +2,15 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef __VMF_DISPINFO_HPP__
-#define __VMF_DISPINFO_HPP__
+module;
 
 #include <mathutil/uvec.h>
 #include <vector>
 
-namespace vmf {
+export module source_engine.vmf:dispinfo;
+
+export namespace source_engine::vmf
+{
 	struct DispInfo {
 		unsigned int power;
 		unsigned int flags;
@@ -22,5 +24,3 @@ namespace vmf {
 		std::vector<std::vector<Vector2>> alphas;
 	};
 };
-
-#endif

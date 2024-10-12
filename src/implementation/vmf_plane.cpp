@@ -2,9 +2,15 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "vmf_plane.hpp"
+module;
 
-vmf::Plane::Plane(glm::vec3 *a, glm::vec3 *b, glm::vec3 *c)
+#include <mathutil/uvec.h>
+
+module source_engine.vmf;
+
+import :plane;
+
+source_engine::vmf::Plane::Plane(glm::vec3 *a, glm::vec3 *b, glm::vec3 *c)
 {
 	glm::vec3 n = glm::cross(*b - *a, *c - *a);
 	uvec::normalize(&n);
@@ -12,13 +18,13 @@ vmf::Plane::Plane(glm::vec3 *a, glm::vec3 *b, glm::vec3 *c)
 	Plane(n, d);
 }
 
-vmf::Plane::Plane(glm::vec3 n, glm::vec3 *pos)
+source_engine::vmf::Plane::Plane(glm::vec3 n, glm::vec3 *pos)
 {
 	m_normal = n;
 	MoveToPos(pos);
 }
 
-vmf::Plane::Plane(glm::vec3 n, double d)
+source_engine::vmf::Plane::Plane(glm::vec3 n, double d)
 {
 	m_normal = n;
 	m_distance = d;
@@ -27,9 +33,9 @@ vmf::Plane::Plane(glm::vec3 n, double d)
 	m_pos.z = n.z * -static_cast<float>(d);
 }
 
-glm::vec3 *vmf::Plane::GetNormal() { return &m_normal; }
+glm::vec3 *source_engine::vmf::Plane::GetNormal() { return &m_normal; }
 
-void vmf::Plane::MoveToPos(glm::vec3 *pos)
+void source_engine::vmf::Plane::MoveToPos(glm::vec3 *pos)
 {
 	glm::vec3 n = *GetNormal();
 	double dNew = glm::dot(n, *pos);
@@ -37,14 +43,14 @@ void vmf::Plane::MoveToPos(glm::vec3 *pos)
 	m_pos = n * float(dNew);
 }
 
-void vmf::Plane::Rotate(EulerAngles &ang)
+void source_engine::vmf::Plane::Rotate(EulerAngles &ang)
 {
 	glm::vec3 n = *GetNormal();
 	uvec::rotate(&n, EulerAngles(ang));
 	m_normal = n;
 }
 
-bool vmf::Plane::GetPlaneIntersection(glm::vec3 *intersect, glm::vec3 *na, glm::vec3 *nb, glm::vec3 *nc, double da, double db, double dc)
+bool source_engine::vmf::Plane::GetPlaneIntersection(glm::vec3 *intersect, glm::vec3 *na, glm::vec3 *nb, glm::vec3 *nc, double da, double db, double dc)
 {
 	float denom = glm::dot(*na, glm::cross(*nb, *nc));
 	if(denom == 0)
