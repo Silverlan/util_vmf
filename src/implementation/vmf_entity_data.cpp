@@ -7,6 +7,7 @@ module;
 #include <sharedutils/util_string.h>
 #include <fsys/filesystem.h>
 #include <fsys/ifile.hpp>
+#include <map>
 
 module source_engine.vmf;
 
