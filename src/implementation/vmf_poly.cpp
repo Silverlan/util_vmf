@@ -294,7 +294,7 @@ void source_engine::vmf::Poly::CalculateTextureAxes()
 
 	Material *mat = GetMaterial();
 	TextureInfo *tex = NULL;
-	if(mat != NULL && mat->GetDataBlock())
+	if(mat != NULL)
 		tex = mat->GetTextureInfo("diffusemap");
 	int w, h;
 	if(tex != NULL) {

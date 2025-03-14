@@ -63,8 +63,8 @@ void source_engine::vmf::PolyMesh::BuildPolyMeshInfo()
 				}
 				return false;
 			};
-			if(mat->GetDataBlock())
-				fFindTexture(mat->GetDataBlock());
+			if(mat->GetPropertyDataBlock())
+				fFindTexture(mat->GetPropertyDataBlock());
 		}
 		if(texInfo == nullptr) {
 			auto bExists = false;
