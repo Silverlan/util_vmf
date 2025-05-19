@@ -165,7 +165,7 @@ void source_engine::vmf::Poly::SortVertices()
 	double BiggestAngle;
 	unsigned int tempvert1 = 0;
 	unsigned int tempvert2;
-	unsigned int biggestVert = NULL;
+	unsigned int biggestVert = 0;
 	for(unsigned int i = 0; i < ((numVerts > 0) ? (numVerts - 1) : 0); i++) {
 		BiggestAngle = 1;
 		tempvert2 = tempvert1 + 1;
@@ -182,7 +182,7 @@ void source_engine::vmf::Poly::SortVertices()
 			}
 			tempvert2++;
 		}
-		if(biggestVert == NULL)
+		if(biggestVert == 0)
 			break;
 		a = glm::vec3(m_vertices[tempvert1].pos);
 		uvec::sub(&a, m_vertices[biggestVert].pos);
