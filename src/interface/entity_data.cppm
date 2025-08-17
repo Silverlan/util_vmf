@@ -9,8 +9,7 @@ module;
 
 export module source_engine.vmf:entitydata;
 
-export namespace source_engine::vmf
-{
+export namespace source_engine::vmf {
 	struct DataFileBlock {
 		~DataFileBlock()
 		{

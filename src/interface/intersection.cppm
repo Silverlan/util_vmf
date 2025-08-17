@@ -7,8 +7,7 @@ module;
 
 export module source_engine.vmf:intersection;
 
-export namespace source_engine::vmf
-{
+export namespace source_engine::vmf {
 	enum class IntersectResult : uint8_t { Outside = 0, Inside, Overlap };
 
 	struct AABB;

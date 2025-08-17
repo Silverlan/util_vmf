@@ -14,8 +14,7 @@ import :vertex;
 import :dispinfo;
 import :polyinfo;
 
-export namespace source_engine::vmf
-{
+export namespace source_engine::vmf {
 	struct TextureData {
 		std::string texture;
 		Vector3 nu;

@@ -104,8 +104,8 @@ void source_engine::vmf::PolyMesh::BuildPolyMeshInfo()
 	}
 }
 
-void source_engine::vmf::PolyMesh::BuildDisplacement(Poly *poly, std::vector<glm::vec3> &verts, glm::vec3 &nu, glm::vec3 &nv, unsigned int w, unsigned int h, std::vector<glm::vec3> &outVertices, std::vector<glm::vec2> &outUvs, std::vector<unsigned int> &outTriangles, std::vector<glm::vec3> &faceNormals,
-  unsigned char &numAlpha, std::vector<glm::vec2> *outAlphas)
+void source_engine::vmf::PolyMesh::BuildDisplacement(Poly *poly, std::vector<glm::vec3> &verts, glm::vec3 &nu, glm::vec3 &nv, unsigned int w, unsigned int h, std::vector<glm::vec3> &outVertices, std::vector<glm::vec2> &outUvs, std::vector<unsigned int> &outTriangles,
+  std::vector<glm::vec3> &faceNormals, unsigned char &numAlpha, std::vector<glm::vec2> *outAlphas)
 {
 	// Texture coordinates
 	auto *texData = poly->GetTextureData();

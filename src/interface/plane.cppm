@@ -8,8 +8,7 @@ module;
 
 export module source_engine.vmf:plane;
 
-export namespace source_engine::vmf
-{
+export namespace source_engine::vmf {
 	class Plane {
 	  public:
 		Plane(glm::vec3 *a, glm::vec3 *b, glm::vec3 *c);

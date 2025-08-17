@@ -12,8 +12,7 @@ export module source_engine.vmf:polymesh;
 
 import :poly;
 
-export namespace source_engine::vmf
-{
+export namespace source_engine::vmf {
 	class BrushMesh;
 	class PolyMesh {
 	  public:

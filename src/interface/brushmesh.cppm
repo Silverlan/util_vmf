@@ -10,8 +10,7 @@ export module source_engine.vmf:brushmesh;
 
 import :side;
 
-export namespace source_engine::vmf
-{
+export namespace source_engine::vmf {
 	class BrushMesh;
 	std::ostream &operator<<(std::ostream &os, const vmf::BrushMesh &mesh);
 	class BrushMesh {

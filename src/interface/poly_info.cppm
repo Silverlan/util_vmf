@@ -8,8 +8,7 @@ module;
 
 export module source_engine.vmf:polyinfo;
 
-export namespace source_engine::vmf
-{
+export namespace source_engine::vmf {
 	class PolyDispInfo {
 	  public:
 		PolyDispInfo();

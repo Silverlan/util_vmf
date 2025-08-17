@@ -8,8 +8,7 @@ module;
 
 export module source_engine.vmf:dispinfo;
 
-export namespace source_engine::vmf
-{
+export namespace source_engine::vmf {
 	struct DispInfo {
 		unsigned int power;
 		unsigned int flags;

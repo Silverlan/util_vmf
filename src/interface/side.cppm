@@ -8,8 +8,7 @@ module;
 
 export module source_engine.vmf:side;
 
-export namespace source_engine::vmf
-{
+export namespace source_engine::vmf {
 	class Side {
 	  public:
 		Side(std::vector<glm::vec3> *vertexList, std::vector<glm::vec3> *verts, std::vector<glm::vec2> *uvs, std::vector<glm::vec3> *normals, std::string &material);
