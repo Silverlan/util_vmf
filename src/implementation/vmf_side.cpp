@@ -3,7 +3,9 @@
 
 module;
 
-#include <mathutil/uvec.h>
+#include <vector>
+#include <string>
+#include <cstring>
 
 module source_engine.vmf;
 

@@ -5,14 +5,16 @@ module;
 
 #include <string>
 #include <optional>
-#include <mathutil/uvec.h>
-#include <materialmanager.h>
+#include <cinttypes>
+#include <vector>
+#include <functional>
 
 export module source_engine.vmf:poly;
 
 import :vertex;
 import :dispinfo;
 import :polyinfo;
+export import pragma.materialsystem;
 
 export namespace source_engine::vmf {
 	struct TextureData {
@@ -36,7 +38,7 @@ export namespace source_engine::vmf {
 	  public:
 		friend std::ostream &operator<<(std::ostream &, const Poly &);
 	  public:
-		Poly(const std::function<Material *(const std::string &)> &fLoadMaterial);
+		Poly(const std::function<msys::Material *(const std::string &)> &fLoadMaterial);
 	  protected:
 		std::vector<Vertex> m_vertices;
 		glm::vec3 m_normal, m__normal;
@@ -49,7 +51,7 @@ export namespace source_engine::vmf {
 		std::optional<TextureData> m_texData = {};
 		std::optional<DispInfo> m_displacement = {};
 		PolyInfo m_compiledData;
-		std::function<Material *(const std::string &)> m_materialLoader = nullptr;
+		std::function<msys::Material *(const std::string &)> m_materialLoader = nullptr;
 		uint32_t m_materialId = std::numeric_limits<uint32_t>::max();
 
 		double m_distance;
@@ -82,14 +84,14 @@ export namespace source_engine::vmf {
 		bool GenerateTriangleMesh(std::vector<glm::vec3> *verts, std::vector<glm::vec2> *uvs, std::vector<glm::vec3> *normals);
 		virtual void SetTextureData(std::string texture, glm::vec3 nu, glm::vec3 nv, float ou, float ov, float su, float sv, float rot = 0);
 		TextureData *GetTextureData();
-		virtual Material *GetMaterial();
+		virtual msys::Material *GetMaterial();
 		glm::vec3 *GetWorldPosition();
 		const short ClassifyPoint(glm::vec3 *point);
 		glm::vec3 GetCalculatedNormal();
 		void ToTriangles(std::vector<glm::vec3> *vertices);
 		void Merge(Poly *other);
 		void RemoveDisplacement();
-		virtual void SetMaterial(Material *material);
+		virtual void SetMaterial(msys::Material *material);
 
 		void SetMaterialId(uint32_t id);
 		uint32_t GetMaterialId() const;

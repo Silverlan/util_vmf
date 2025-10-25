@@ -4,7 +4,7 @@
 module;
 
 #include <vector>
-#include <mathutil/uvec.h>
+#include <iostream>
 
 export module source_engine.vmf:brushmesh;
 

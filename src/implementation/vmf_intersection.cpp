@@ -3,7 +3,7 @@
 
 module;
 
-#include <mathutil/uvec.h>
+#include <cmath>
 
 module source_engine.vmf;
 

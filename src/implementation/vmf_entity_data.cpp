@@ -3,9 +3,10 @@
 
 module;
 
-#include <sharedutils/util_string.h>
-#include <fsys/filesystem.h>
-#include <fsys/ifile.hpp>
+#include <cinttypes>
+#include <vector>
+#include <string>
+
 #include <map>
 
 module source_engine.vmf;

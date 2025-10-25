@@ -4,9 +4,12 @@
 module;
 
 #include <vector>
-#include <mathutil/uvec.h>
+#include <string>
+#include <iostream>
 
 export module source_engine.vmf:side;
+
+export import pragma.math;
 
 export namespace source_engine::vmf {
 	class Side {

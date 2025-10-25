@@ -3,9 +3,11 @@
 
 module;
 
-#include <mathutil/uvec.h>
+#include <cinttypes>
 
 export module source_engine.vmf:intersection;
+
+export import pragma.math;
 
 export namespace source_engine::vmf {
 	enum class IntersectResult : uint8_t { Outside = 0, Inside, Overlap };
@@ -17,8 +19,8 @@ export namespace source_engine::vmf {
 		IntersectResult AABBAABB(const glm::vec3 &minA, const glm::vec3 &maxA, const glm::vec3 &minB, const glm::vec3 &maxB);
 		bool AABBAABB(AABB *a, AABB *b);
 		bool AABBTriangle(glm::vec3 min, glm::vec3 max, glm::vec3 a, glm::vec3 b, glm::vec3 c);
-		bool LineAABB(glm::vec3 &o, glm::vec3 &d, glm::vec3 &min, glm::vec3 &max, float *tMinRes, float *tMaxRes = NULL);
-		bool LinePlane(glm::vec3 &o, glm::vec3 &d, glm::vec3 &nPlane, float distPlane, float *t = NULL);
+		bool LineAABB(glm::vec3 &o, glm::vec3 &d, glm::vec3 &min, glm::vec3 &max, float *tMinRes, float *tMaxRes = nullptr);
+		bool LinePlane(glm::vec3 &o, glm::vec3 &d, glm::vec3 &nPlane, float distPlane, float *t = nullptr);
 		bool SphereSphere(glm::vec3 &originA, float rA, glm::vec3 &originB, float rB);
 		bool AABBSphere(glm::vec3 &min, glm::vec3 &max, glm::vec3 &origin, float r);
 	};

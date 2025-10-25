@@ -6,7 +6,6 @@ module;
 #include <vector>
 #include <iostream>
 #include <memory>
-#include <mathutil/uvec.h>
 
 export module source_engine.vmf:polymesh;
 

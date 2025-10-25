@@ -3,10 +3,14 @@
 
 module;
 
+#include <cmath>
+
 #include <cassert>
 #include <string>
-#include <mathutil/uvec.h>
-#include <materialmanager.h>
+#include <memory>
+#include <iostream>
+#include <functional>
+#include <vector>
 
 module source_engine.vmf;
 

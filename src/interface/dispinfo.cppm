@@ -3,10 +3,11 @@
 
 module;
 
-#include <mathutil/uvec.h>
 #include <vector>
 
 export module source_engine.vmf:dispinfo;
+
+export import pragma.math;
 
 export namespace source_engine::vmf {
 	struct DispInfo {
