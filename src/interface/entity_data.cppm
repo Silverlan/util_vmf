@@ -3,10 +3,6 @@
 
 module;
 
-#include <map>
-#include <vector>
-#include <string>
-#include <cinttypes>
 
 export module source_engine.vmf:entitydata;
 

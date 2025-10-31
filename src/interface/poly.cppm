@@ -3,11 +3,6 @@
 
 module;
 
-#include <string>
-#include <optional>
-#include <cinttypes>
-#include <vector>
-#include <functional>
 
 export module source_engine.vmf:poly;
 

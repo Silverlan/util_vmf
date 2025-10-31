@@ -3,12 +3,8 @@
 
 module;
 
-#include <iostream>
 
-#include <cinttypes>
 
-#include <string>
-#include <functional>
 
 module source_engine.vmf;
 
@@ -292,15 +288,15 @@ void source_engine::vmf::Poly::Localize(const glm::vec3 &center)
 void source_engine::vmf::Poly::CalculateTextureAxes()
 {
 	TextureData *texData = GetTextureData();
-	if(texData == NULL)
+	if(texData == nullptr)
 		return;
 
 	msys::Material *mat = GetMaterial();
-	TextureInfo *tex = NULL;
-	if(mat != NULL)
+	TextureInfo *tex = nullptr;
+	if(mat != nullptr)
 		tex = mat->GetTextureInfo("diffusemap");
 	int w, h;
-	if(tex != NULL) {
+	if(tex != nullptr) {
 		w = tex->width;
 		h = tex->height;
 	}

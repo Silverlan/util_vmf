@@ -3,8 +3,6 @@
 
 module;
 
-#include <vector>
-#include <iostream>
 
 export module source_engine.vmf:brushmesh;
 
@@ -26,7 +24,7 @@ export namespace source_engine::vmf {
 		virtual void AddSide(Side *side);
 		void GetSides(std::vector<Side *> **sides);
 		bool IntersectAABB(glm::vec3 *min, glm::vec3 *max);
-		bool IntersectAABB(glm::vec3 &pos, glm::vec3 &posNew, glm::vec3 &extents, glm::vec3 &posObj, float *entryTime, float *exitTime, glm::vec3 *hitnormal = NULL);
+		bool IntersectAABB(glm::vec3 &pos, glm::vec3 &posNew, glm::vec3 &extents, glm::vec3 &posObj, float *entryTime, float *exitTime, glm::vec3 *hitnormal = nullptr);
 		void Calculate();
 		void GetBounds(glm::vec3 *min, glm::vec3 *max) const;
 		bool PointInside(glm::vec3 &p, double epsilon = 0);

@@ -3,11 +3,7 @@
 
 module;
 
-#include <cinttypes>
-#include <vector>
-#include <string>
 
-#include <map>
 
 module source_engine.vmf;
 
@@ -58,7 +54,7 @@ source_engine::vmf::DataFileBlock *source_engine::vmf::DataFile::ReadBlock(ufile
 						char c;
 						do
 							c = static_cast<char>(f.ReadChar());
-						while(c != '{' && c != EOF);
+						while(c != '{' && c != std::char_traits<char>::eof());
 					}
 					std::map<std::string, std::vector<DataFileBlock *> *>::iterator i = block->blocks.find(blockName);
 					std::vector<DataFileBlock *> *blocks;

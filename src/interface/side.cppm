@@ -3,9 +3,6 @@
 
 module;
 
-#include <vector>
-#include <string>
-#include <iostream>
 
 export module source_engine.vmf:side;
 

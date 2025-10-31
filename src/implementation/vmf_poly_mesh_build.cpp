@@ -3,14 +3,8 @@
 
 module;
 
-#include <cmath>
 
 #include <cassert>
-#include <string>
-#include <memory>
-#include <iostream>
-#include <functional>
-#include <vector>
 
 module source_engine.vmf;
 
@@ -211,7 +205,7 @@ void source_engine::vmf::PolyMesh::BuildDisplacementTriangles(std::vector<glm::v
 	glm::vec3 cur = sortedSideVerts[0];
 	for(int col = 0; col < rows; col++) {
 		std::vector<glm::vec3> &cNormals = normals[col];
-		std::vector<glm::vec2> *cAlphas = (numAlpha > 0) ? &alphas[col] : NULL;
+		std::vector<glm::vec2> *cAlphas = (numAlpha > 0) ? &alphas[col] : nullptr;
 		std::vector<float> &cDistances = distances[col];
 		std::vector<glm::vec3> &cOffsets = offsets[col];
 

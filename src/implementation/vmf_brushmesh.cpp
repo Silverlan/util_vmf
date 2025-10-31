@@ -3,9 +3,7 @@
 
 module;
 
-#include <vector>
 
-#include <iostream>
 
 module source_engine.vmf;
 

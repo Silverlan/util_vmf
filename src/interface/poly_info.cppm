@@ -3,8 +3,6 @@
 
 module;
 
-#include <memory>
-#include <vector>
 
 export module source_engine.vmf:polyinfo;
 

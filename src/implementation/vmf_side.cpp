@@ -3,9 +3,6 @@
 
 module;
 
-#include <vector>
-#include <string>
-#include <cstring>
 
 module source_engine.vmf;
 
