@@ -3,11 +3,9 @@
 
 module;
 
-#include <map>
-#include <vector>
-#include <sharedutils/util_ifile.hpp>
-
 export module source_engine.vmf:entitydata;
+
+export import pragma.filesystem;
 
 export namespace source_engine::vmf {
 	struct DataFileBlock {

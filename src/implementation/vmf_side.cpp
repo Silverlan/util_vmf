@@ -3,8 +3,6 @@
 
 module;
 
-#include <mathutil/uvec.h>
-
 module source_engine.vmf;
 
 import :intersection;

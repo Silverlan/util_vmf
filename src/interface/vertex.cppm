@@ -3,9 +3,9 @@
 
 module;
 
-#include <mathutil/uvec.h>
-
 export module source_engine.vmf:vertex;
+
+export import pragma.math;
 
 export namespace source_engine::vmf {
 	struct Vertex {

@@ -3,10 +3,9 @@
 
 module;
 
-#include <mathutil/uvec.h>
-#include <mathutil/eulerangles.h>
-
 export module source_engine.vmf:plane;
+
+export import pragma.math;
 
 export namespace source_engine::vmf {
 	class Plane {

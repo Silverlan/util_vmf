@@ -3,11 +3,6 @@
 
 module;
 
-#include <vector>
-#include <iostream>
-#include <memory>
-#include <mathutil/uvec.h>
-
 export module source_engine.vmf:polymesh;
 
 import :poly;
@@ -30,7 +25,7 @@ export namespace source_engine::vmf {
 		glm::vec3 m_centerOfMass;
 		bool m_bValid;
 		std::vector<glm::vec3 *> m_vertices;
-		bool HasVertex(Vertex *v, glm::vec3 *vThis = NULL);
+		bool HasVertex(Vertex *v, glm::vec3 *vThis = nullptr);
 		void Localize(const glm::vec3 &center);
 		void Localize();
 

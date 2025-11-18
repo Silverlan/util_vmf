@@ -3,9 +3,6 @@
 
 module;
 
-#include <iostream>
-#include <mathutil/uvec.h>
-
 module source_engine.vmf;
 
 import :brushmesh;

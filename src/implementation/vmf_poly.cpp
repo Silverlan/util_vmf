@@ -3,9 +3,6 @@
 
 module;
 
-#include <sharedutils/util_string.h>
-#include <materialmanager.h>
-
 module source_engine.vmf;
 
 import :poly;
@@ -16,7 +13,7 @@ std::ostream &source_engine::vmf::operator<<(std::ostream &os, const source_engi
 	return os;
 }
 
-source_engine::vmf::Poly::Poly(const std::function<Material *(const std::string &)> &fLoadMaterial) : m_materialLoader(fLoadMaterial)
+source_engine::vmf::Poly::Poly(const std::function<msys::Material *(const std::string &)> &fLoadMaterial) : m_materialLoader(fLoadMaterial)
 {
 	m_distance = 0;
 	m_normal.x = 0;
@@ -81,8 +78,8 @@ void source_engine::vmf::Poly::SetTextureData(std::string texture, glm::vec3 nu,
 
 source_engine::vmf::TextureData *source_engine::vmf::Poly::GetTextureData() { return m_texData.has_value() ? &*m_texData : nullptr; }
 
-Material *source_engine::vmf::Poly::GetMaterial() { return m_material.get(); }
-void source_engine::vmf::Poly::SetMaterial(Material *material) { m_material = material ? material->GetHandle() : msys::MaterialHandle {}; }
+msys::Material *source_engine::vmf::Poly::GetMaterial() { return m_material.get(); }
+void source_engine::vmf::Poly::SetMaterial(msys::Material *material) { m_material = material ? material->GetHandle() : msys::MaterialHandle {}; }
 
 void source_engine::vmf::Poly::SetMaterialId(uint32_t id) { m_materialId = id; }
 uint32_t source_engine::vmf::Poly::GetMaterialId() const { return m_materialId; }
@@ -288,15 +285,15 @@ void source_engine::vmf::Poly::Localize(const glm::vec3 &center)
 void source_engine::vmf::Poly::CalculateTextureAxes()
 {
 	TextureData *texData = GetTextureData();
-	if(texData == NULL)
+	if(texData == nullptr)
 		return;
 
-	Material *mat = GetMaterial();
-	TextureInfo *tex = NULL;
-	if(mat != NULL)
+	msys::Material *mat = GetMaterial();
+	TextureInfo *tex = nullptr;
+	if(mat != nullptr)
 		tex = mat->GetTextureInfo("diffusemap");
 	int w, h;
-	if(tex != NULL) {
+	if(tex != nullptr) {
 		w = tex->width;
 		h = tex->height;
 	}

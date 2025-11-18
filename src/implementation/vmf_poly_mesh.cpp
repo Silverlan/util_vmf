@@ -3,8 +3,6 @@
 
 module;
 
-#include <mathutil/uvec.h>
-
 module source_engine.vmf;
 
 import :polymesh;
@@ -229,7 +227,7 @@ void source_engine::vmf::PolyMesh::CenterPolys()
 
 void source_engine::vmf::PolyMesh::Localize(const glm::vec3 &center)
 {
-	if(m_centerLocalized == NULL)
+	if(m_centerLocalized == nullptr)
 		m_centerLocalized = new glm::vec3(center);
 	else
 		uvec::add(m_centerLocalized, center);
@@ -256,7 +254,7 @@ bool source_engine::vmf::PolyMesh::HasVertex(Vertex *v, glm::vec3 *vThis)
 			glm::vec3 diff(*posThis);
 			uvec::sub(&diff, pos);
 			if(diff.x <= EPSILON && diff.x >= -EPSILON && diff.y <= EPSILON && diff.y >= -EPSILON && diff.z <= EPSILON && diff.z >= -EPSILON) {
-				if(vThis != NULL) {
+				if(vThis != nullptr) {
 					vThis->x = posThis->x;
 					vThis->y = posThis->y;
 					vThis->z = posThis->z;

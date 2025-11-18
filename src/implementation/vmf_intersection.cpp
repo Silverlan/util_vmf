@@ -3,8 +3,6 @@
 
 module;
 
-#include <mathutil/uvec.h>
-
 module source_engine.vmf;
 
 import :intersection;
@@ -91,7 +89,7 @@ bool source_engine::vmf::Intersect::LineAABB(glm::vec3 &o, glm::vec3 &d, glm::ve
 	if(tzMax < tMax)
 		tMax = tzMax;
 	*tMinRes = tMin;
-	if(tMaxRes != NULL)
+	if(tMaxRes != nullptr)
 		*tMaxRes = tMax;
 	return true;
 }
@@ -102,7 +100,7 @@ bool source_engine::vmf::Intersect::LinePlane(glm::vec3 &o, glm::vec3 &dir, glm:
 	if(f == 0)
 		return false;
 	float hit = (glm::dot(nPlane, (nPlane * -distPlane) - o)) / f;
-	if(t != NULL)
+	if(t != nullptr)
 		*t = hit;
 	return true;
 }
@@ -234,7 +232,7 @@ bool source_engine::vmf::Sweep::AABBWithAABB(glm::vec3 aa, glm::vec3 &ab, glm::v
 	::source_engine::vmf::AABB b(ba, extB);
 	*entryTime = 0;
 	*exitTime = 0;
-	if(normal != NULL) {
+	if(normal != nullptr) {
 		normal->x = 0;
 		normal->y = 0;
 		normal->z = 0;

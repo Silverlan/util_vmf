@@ -3,10 +3,9 @@
 
 module;
 
-#include <memory>
-#include <mathutil/uvec.h>
-
 export module source_engine.vmf:polyinfo;
+
+export import pragma.math;
 
 export namespace source_engine::vmf {
 	class PolyDispInfo {

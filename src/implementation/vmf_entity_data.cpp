@@ -3,11 +3,6 @@
 
 module;
 
-#include <sharedutils/util_string.h>
-#include <fsys/filesystem.h>
-#include <fsys/ifile.hpp>
-#include <map>
-
 module source_engine.vmf;
 
 import :entitydata;
@@ -57,7 +52,7 @@ source_engine::vmf::DataFileBlock *source_engine::vmf::DataFile::ReadBlock(ufile
 						char c;
 						do
 							c = static_cast<char>(f.ReadChar());
-						while(c != '{' && c != EOF);
+						while(c != '{' && c != std::char_traits<char>::eof());
 					}
 					std::map<std::string, std::vector<DataFileBlock *> *>::iterator i = block->blocks.find(blockName);
 					std::vector<DataFileBlock *> *blocks;
