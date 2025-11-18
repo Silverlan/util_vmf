@@ -3,8 +3,6 @@
 
 module;
 
-
-
 module source_engine.vmf;
 
 import :polymesh;

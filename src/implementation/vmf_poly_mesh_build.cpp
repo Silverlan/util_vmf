@@ -3,7 +3,6 @@
 
 module;
 
-
 #include <cassert>
 
 module source_engine.vmf;

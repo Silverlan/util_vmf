@@ -3,7 +3,6 @@
 
 module;
 
-
 export module source_engine.vmf:brushmesh;
 
 import :side;

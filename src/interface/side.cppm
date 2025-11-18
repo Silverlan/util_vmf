@@ -3,7 +3,6 @@
 
 module;
 
-
 export module source_engine.vmf:side;
 
 export import pragma.math;

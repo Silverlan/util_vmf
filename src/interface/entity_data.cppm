@@ -3,7 +3,6 @@
 
 module;
 
-
 export module source_engine.vmf:entitydata;
 
 export import pragma.filesystem;

@@ -3,9 +3,6 @@
 
 module;
 
-
-
-
 module source_engine.vmf;
 
 import :poly;
