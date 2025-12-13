@@ -9,7 +9,7 @@ import :side;
 
 export namespace source_engine::vmf {
 	class BrushMesh;
-	std::ostream &operator<<(std::ostream &os, const vmf::BrushMesh &mesh);
+	std::ostream &operator<<(std::ostream &os, const BrushMesh &mesh);
 	class BrushMesh {
 		friend std::ostream &operator<<(std::ostream &, const BrushMesh &);
 	  public:

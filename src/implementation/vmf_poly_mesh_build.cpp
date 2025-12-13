@@ -41,19 +41,19 @@ void source_engine::vmf::PolyMesh::BuildPolyMeshInfo()
 		auto *texInfo = (mat != nullptr) ? mat->GetDiffuseMap() : nullptr;
 		if(texInfo == nullptr && mat != nullptr) {
 			// Find first texture in material
-			std::function<bool(const std::shared_ptr<ds::Block> &)> fFindTexture = nullptr;
-			fFindTexture = [&texInfo, &fFindTexture](const std::shared_ptr<ds::Block> &block) -> bool {
+			std::function<bool(const std::shared_ptr<pragma::datasystem::Block> &)> fFindTexture = nullptr;
+			fFindTexture = [&texInfo, &fFindTexture](const std::shared_ptr<pragma::datasystem::Block> &block) -> bool {
 				auto *data = block->GetData();
 				if(data == nullptr)
 					return false;
 				for(auto &pair : *data) {
 					if(pair.second->IsBlock()) {
-						if(fFindTexture(std::static_pointer_cast<ds::Block>(pair.second)) == true)
+						if(fFindTexture(std::static_pointer_cast<pragma::datasystem::Block>(pair.second)) == true)
 							return true;
 						continue;
 					}
-					if(std::dynamic_pointer_cast<ds::Texture>(pair.second) != nullptr) {
-						texInfo = &static_cast<ds::Texture *>(pair.second.get())->GetValue();
+					if(std::dynamic_pointer_cast<pragma::datasystem::Texture>(pair.second) != nullptr) {
+						texInfo = &static_cast<pragma::datasystem::Texture *>(pair.second.get())->GetValue();
 						return true;
 					}
 				}
@@ -178,7 +178,7 @@ void source_engine::vmf::PolyMesh::BuildDisplacementTriangles(std::vector<glm::v
   std::vector<std::vector<glm::vec3>> &offsets, std::vector<std::vector<float>> &distances, unsigned char numAlpha, std::vector<std::vector<glm::vec2>> &alphas, std::vector<glm::vec3> &outVertices, std::vector<glm::vec2> &outUvs, std::vector<unsigned int> &outTriangles,
   std::vector<glm::vec3> &faceNormals, std::vector<glm::vec2> *outAlphas)
 {
-	int rows = umath::pow(2, CInt32(power)) + 1;
+	int rows = pragma::math::pow(2, CInt32(power)) + 1;
 	unsigned int numVerts = rows * rows;
 	outUvs.resize(numVerts);
 	if(numAlpha > 0)
@@ -339,7 +339,7 @@ void source_engine::vmf::PolyMesh::BuildDisplacementNormals(std::vector<std::sha
 {
 	auto &displacement = *info.displacement.get();
 	auto &faceNormals = displacement.faceNormals;
-	auto rows = umath::pow(2, CInt32(displacement.power)) + 1;
+	auto rows = pragma::math::pow(2, CInt32(displacement.power)) + 1;
 	auto numVerts = rows * rows;
 	outNormals.resize(numVerts);
 

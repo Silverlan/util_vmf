@@ -7,13 +7,13 @@ module source_engine.vmf;
 
 import :poly;
 
-std::ostream &source_engine::vmf::operator<<(std::ostream &os, const source_engine::vmf::Poly &poly)
+std::ostream &source_engine::vmf::operator<<(std::ostream &os, const Poly &poly)
 {
 	os << "Poly[" << &poly << "] [" << poly.m_vertices.size() << "] [" << poly.m__normal.x << " " << poly.m__normal.y << " " << poly.m__normal.z << "] [" << poly.m_distance << "]";
 	return os;
 }
 
-source_engine::vmf::Poly::Poly(const std::function<msys::Material *(const std::string &)> &fLoadMaterial) : m_materialLoader(fLoadMaterial)
+source_engine::vmf::Poly::Poly(const std::function<pragma::materials::Material *(const std::string &)> &fLoadMaterial) : m_materialLoader(fLoadMaterial)
 {
 	m_distance = 0;
 	m_normal.x = 0;
@@ -40,7 +40,7 @@ void source_engine::vmf::Poly::RemoveDisplacement()
 		return;
 	m_displacement = {};
 	auto *mat = m_materialLoader("tools/toolsnodraw");
-	m_material = mat ? mat->GetHandle() : msys::MaterialHandle {};
+	m_material = mat ? mat->GetHandle() : pragma::materials::MaterialHandle {};
 }
 
 source_engine::vmf::PolyInfo &source_engine::vmf::Poly::GetCompiledData() { return m_compiledData; }
@@ -61,7 +61,7 @@ bool source_engine::vmf::Poly::IsDisplacement() { return m_displacement.has_valu
 
 void source_engine::vmf::Poly::SetTextureData(std::string texture, glm::vec3 nu, glm::vec3 nv, float ou, float ov, float su, float sv, float rot)
 {
-	ustring::to_lower(texture);
+	pragma::string::to_lower(texture);
 	m_texData = TextureData {};
 	m_texData->texture = texture;
 	m_texData->nu = nu;
@@ -78,8 +78,8 @@ void source_engine::vmf::Poly::SetTextureData(std::string texture, glm::vec3 nu,
 
 source_engine::vmf::TextureData *source_engine::vmf::Poly::GetTextureData() { return m_texData.has_value() ? &*m_texData : nullptr; }
 
-msys::Material *source_engine::vmf::Poly::GetMaterial() { return m_material.get(); }
-void source_engine::vmf::Poly::SetMaterial(msys::Material *material) { m_material = material ? material->GetHandle() : msys::MaterialHandle {}; }
+pragma::materials::Material *source_engine::vmf::Poly::GetMaterial() { return m_material.get(); }
+void source_engine::vmf::Poly::SetMaterial(pragma::materials::Material *material) { m_material = material ? material->GetHandle() : pragma::materials::MaterialHandle {}; }
 
 void source_engine::vmf::Poly::SetMaterialId(uint32_t id) { m_materialId = id; }
 uint32_t source_engine::vmf::Poly::GetMaterialId() const { return m_materialId; }
@@ -288,7 +288,7 @@ void source_engine::vmf::Poly::CalculateTextureAxes()
 	if(texData == nullptr)
 		return;
 
-	msys::Material *mat = GetMaterial();
+	pragma::materials::Material *mat = GetMaterial();
 	TextureInfo *tex = nullptr;
 	if(mat != nullptr)
 		tex = mat->GetTextureInfo("diffusemap");

@@ -23,7 +23,7 @@ bool source_engine::vmf::Intersect::SphereSphere(glm::vec3 &originA, float rA, g
 bool source_engine::vmf::Intersect::AABBSphere(glm::vec3 &min, glm::vec3 &max, glm::vec3 &origin, float r)
 {
 	glm::vec3 pClosest;
-	source_engine::vmf::Geometry::ClosestPointOnAABBToPoint(min, max, origin, pClosest);
+	Geometry::ClosestPointOnAABBToPoint(min, max, origin, pClosest);
 	float d = glm::distance(pClosest, origin);
 	return d <= r;
 }
@@ -228,8 +228,8 @@ float source_engine::vmf::Geometry::ClosestPointsBetweenLines(glm::vec3 &pA, glm
 
 bool source_engine::vmf::Sweep::AABBWithAABB(glm::vec3 aa, glm::vec3 &ab, glm::vec3 &extA, glm::vec3 ba, glm::vec3 &bb, glm::vec3 &extB, float *entryTime, float *exitTime, glm::vec3 *normal)
 {
-	::source_engine::vmf::AABB a(aa, extA);
-	::source_engine::vmf::AABB b(ba, extB);
+	AABB a(aa, extA);
+	AABB b(ba, extB);
 	*entryTime = 0;
 	*exitTime = 0;
 	if(normal != nullptr) {

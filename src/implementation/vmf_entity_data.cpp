@@ -9,10 +9,10 @@ import :entitydata;
 
 source_engine::vmf::DataFileBlock *source_engine::vmf::DataFile::Read(const char *fName)
 {
-	auto fptr = FileManager::OpenFile(fName, "r");
+	auto fptr = pragma::fs::open_file(fName, pragma::fs::FileMode::Read);
 	if(!fptr)
 		return nullptr;
-	fsys::File f {fptr};
+	pragma::fs::File f {fptr};
 	DataFileBlock *block = ReadBlock(f);
 	return block;
 }
@@ -23,10 +23,10 @@ source_engine::vmf::DataFileBlock *source_engine::vmf::DataFile::ReadBlock(ufile
 	while(!f.Eof() && f.Tell() < readUntil) {
 		std::string sbuf = f.ReadLine();
 		if(sbuf.length() > 0 && sbuf[0] != '\0') {
-			ustring::remove_whitespace(sbuf);
+			pragma::string::remove_whitespace(sbuf);
 			if(sbuf.length() > 0) {
-				size_t cLast = sbuf.find_first_of(ustring::WHITESPACE);
-				size_t cNext = sbuf.find_first_not_of(ustring::WHITESPACE, cLast);
+				size_t cLast = sbuf.find_first_of(pragma::string::WHITESPACE);
+				size_t cNext = sbuf.find_first_not_of(pragma::string::WHITESPACE, cLast);
 				if(cNext != size_t(-1)) {
 					std::string key, val;
 					size_t stKey = sbuf.find('\"');
@@ -47,7 +47,7 @@ source_engine::vmf::DataFileBlock *source_engine::vmf::DataFile::ReadBlock(ufile
 					auto blockName = sbuf;
 					if(sbuf == "{")
 						blockName = "unnamed";
-					ustring::remove_quotes(blockName);
+					pragma::string::remove_quotes(blockName);
 					if(sbuf != "{") {
 						char c;
 						do

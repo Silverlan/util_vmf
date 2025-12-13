@@ -27,12 +27,12 @@ export namespace source_engine::vmf {
 
 	const double EPSILON = 4.9406564584125e-2; //4.9406564584125e-4;//4.94065645841247e-324;
 	class Poly;
-	std::ostream &operator<<(std::ostream &os, const vmf::Poly &poly);
+	std::ostream &operator<<(std::ostream &os, const Poly &poly);
 	class Poly {
 	  public:
 		friend std::ostream &operator<<(std::ostream &, const Poly &);
 	  public:
-		Poly(const std::function<msys::Material *(const std::string &)> &fLoadMaterial);
+		Poly(const std::function<pragma::materials::Material *(const std::string &)> &fLoadMaterial);
 	  protected:
 		std::vector<Vertex> m_vertices;
 		glm::vec3 m_normal, m__normal;
@@ -41,11 +41,11 @@ export namespace source_engine::vmf {
 		glm::vec3 m_min;
 		glm::vec3 m_max;
 		glm::vec3 m_centerOfMass;
-		msys::MaterialHandle m_material = {};
+		pragma::materials::MaterialHandle m_material = {};
 		std::optional<TextureData> m_texData = {};
 		std::optional<DispInfo> m_displacement = {};
 		PolyInfo m_compiledData;
-		std::function<msys::Material *(const std::string &)> m_materialLoader = nullptr;
+		std::function<pragma::materials::Material *(const std::string &)> m_materialLoader = nullptr;
 		uint32_t m_materialId = std::numeric_limits<uint32_t>::max();
 
 		double m_distance;
@@ -78,14 +78,14 @@ export namespace source_engine::vmf {
 		bool GenerateTriangleMesh(std::vector<glm::vec3> *verts, std::vector<glm::vec2> *uvs, std::vector<glm::vec3> *normals);
 		virtual void SetTextureData(std::string texture, glm::vec3 nu, glm::vec3 nv, float ou, float ov, float su, float sv, float rot = 0);
 		TextureData *GetTextureData();
-		virtual msys::Material *GetMaterial();
+		virtual pragma::materials::Material *GetMaterial();
 		glm::vec3 *GetWorldPosition();
 		const short ClassifyPoint(glm::vec3 *point);
 		glm::vec3 GetCalculatedNormal();
 		void ToTriangles(std::vector<glm::vec3> *vertices);
 		void Merge(Poly *other);
 		void RemoveDisplacement();
-		virtual void SetMaterial(msys::Material *material);
+		virtual void SetMaterial(pragma::materials::Material *material);
 
 		void SetMaterialId(uint32_t id);
 		uint32_t GetMaterialId() const;

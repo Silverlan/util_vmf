@@ -8,7 +8,7 @@ module source_engine.vmf;
 import :brushmesh;
 import :intersection;
 
-std::ostream &source_engine::vmf::operator<<(std::ostream &os, const source_engine::vmf::BrushMesh &mesh)
+std::ostream &source_engine::vmf::operator<<(std::ostream &os, const BrushMesh &mesh)
 {
 	glm::vec3 min, max;
 	mesh.GetBounds(&min, &max);
@@ -36,12 +36,12 @@ bool source_engine::vmf::BrushMesh::IntersectAABB(glm::vec3 &pos, glm::vec3 &pos
 {
 	glm::vec3 extentsThis = (m_max - m_min) * 0.5f;
 	glm::vec3 posThis = posObj + m_min + extentsThis;
-	return source_engine::vmf::Sweep::AABBWithAABB(pos, posNew, extents, posThis, posThis, extentsThis, entryTime, exitTime, hitnormal);
+	return Sweep::AABBWithAABB(pos, posNew, extents, posThis, posThis, extentsThis, entryTime, exitTime, hitnormal);
 }
 
 bool source_engine::vmf::BrushMesh::IntersectAABB(glm::vec3 *min, glm::vec3 *max)
 {
-	if(source_engine::vmf::Intersect::AABBAABB(m_min, m_max, *min, *max) == IntersectResult::Outside)
+	if(Intersect::AABBAABB(m_min, m_max, *min, *max) == IntersectResult::Outside)
 		return false;
 	return true;
 }

@@ -105,7 +105,7 @@ int source_engine::vmf::PolyMesh::BuildPolyMesh()
 				auto na = a->GetNormal();
 				auto nb = b->GetNormal();
 				auto nc = c->GetNormal();
-				bool bIntersect = source_engine::vmf::Plane::GetPlaneIntersection(&intersect, &na, &nb, &nc, a->GetDistance(), b->GetDistance(), c->GetDistance());
+				bool bIntersect = Plane::GetPlaneIntersection(&intersect, &na, &nb, &nc, a->GetDistance(), b->GetDistance(), c->GetDistance());
 				if(bIntersect) {
 					for(int m = 0; m < numPolys; m++) {
 						Poly *poly = m_polys[m];
