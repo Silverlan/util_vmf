@@ -13,7 +13,7 @@ std::ostream &source_engine::vmf::operator<<(std::ostream &os, const Poly &poly)
 	return os;
 }
 
-source_engine::vmf::Poly::Poly(const std::function<pragma::materials::Material *(const std::string &)> &fLoadMaterial) : m_materialLoader(fLoadMaterial)
+source_engine::vmf::Poly::Poly(const std::function<pragma::material::Material *(const std::string &)> &fLoadMaterial) : m_materialLoader(fLoadMaterial)
 {
 	m_distance = 0;
 	m_normal.x = 0;
@@ -40,7 +40,7 @@ void source_engine::vmf::Poly::RemoveDisplacement()
 		return;
 	m_displacement = {};
 	auto *mat = m_materialLoader("tools/toolsnodraw");
-	m_material = mat ? mat->GetHandle() : pragma::materials::MaterialHandle {};
+	m_material = mat ? mat->GetHandle() : pragma::material::MaterialHandle {};
 }
 
 source_engine::vmf::PolyInfo &source_engine::vmf::Poly::GetCompiledData() { return m_compiledData; }
@@ -78,8 +78,8 @@ void source_engine::vmf::Poly::SetTextureData(std::string texture, glm::vec3 nu,
 
 source_engine::vmf::TextureData *source_engine::vmf::Poly::GetTextureData() { return m_texData.has_value() ? &*m_texData : nullptr; }
 
-pragma::materials::Material *source_engine::vmf::Poly::GetMaterial() { return m_material.get(); }
-void source_engine::vmf::Poly::SetMaterial(pragma::materials::Material *material) { m_material = material ? material->GetHandle() : pragma::materials::MaterialHandle {}; }
+pragma::material::Material *source_engine::vmf::Poly::GetMaterial() { return m_material.get(); }
+void source_engine::vmf::Poly::SetMaterial(pragma::material::Material *material) { m_material = material ? material->GetHandle() : pragma::material::MaterialHandle {}; }
 
 void source_engine::vmf::Poly::SetMaterialId(uint32_t id) { m_materialId = id; }
 uint32_t source_engine::vmf::Poly::GetMaterialId() const { return m_materialId; }
@@ -288,7 +288,7 @@ void source_engine::vmf::Poly::CalculateTextureAxes()
 	if(texData == nullptr)
 		return;
 
-	pragma::materials::Material *mat = GetMaterial();
+	pragma::material::Material *mat = GetMaterial();
 	TextureInfo *tex = nullptr;
 	if(mat != nullptr)
 		tex = mat->GetTextureInfo("diffusemap");
